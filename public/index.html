@@ -59,7 +59,7 @@ input:focus{outline:none;border-color:var(--accent)}
 .page-hint{font-size:12px;color:var(--dim)}
 
 /* ── DASHBOARD ── */
-.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 @media(max-width:700px){.dash-grid{grid-template-columns:1fr}}
 .dash-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
 .dash-card h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
@@ -70,6 +70,26 @@ input:focus{outline:none;border-color:var(--accent)}
 .row-date{font-size:11px;color:var(--dim);width:52px;text-align:center}
 .row-teams{flex:1;font-weight:600}
 .row-grp{font-size:11px;color:var(--dim);width:48px;text-align:right}
+/* inline prediction rows on dashboard */
+.up-day{font-size:11px;font-weight:800;text-transform:uppercase;color:var(--dim);
+  letter-spacing:.06em;margin:14px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.up-day:first-child{margin-top:0}
+.up-match{display:flex;align-items:center;gap:10px;padding:9px 10px;
+  background:var(--surface2);border-radius:9px;margin-bottom:7px;flex-wrap:wrap}
+.up-match:last-child{margin-bottom:0}
+.up-teams{flex:1;min-width:160px;font-size:13px;font-weight:700}
+.up-venue{font-size:10px;color:var(--dim);display:block;font-weight:400;margin-top:1px}
+.up-inputs{display:flex;align-items:center;gap:6px}
+.up-in{width:46px;height:38px;text-align:center;font-size:17px;font-weight:800;
+  background:var(--bg);border:2px solid var(--border);border-radius:7px;color:var(--text)}
+.up-in:focus{outline:none;border-color:var(--accent)}
+.up-dash{color:var(--dim);font-size:14px}
+.up-save{padding:7px 14px;background:var(--accent);color:#000;border:none;border-radius:7px;
+  font-size:12px;font-weight:800;cursor:pointer;transition:.15s;white-space:nowrap}
+.up-save:hover{opacity:.85}
+.up-saved{padding:7px 14px;background:rgba(0,200,83,.15);color:var(--green);border:1px solid rgba(0,200,83,.3);
+  border-radius:7px;font-size:12px;font-weight:800;white-space:nowrap}
+.up-grp{font-size:10px;color:var(--dim);width:42px;text-align:right;flex-shrink:0}
 .score-box2{display:flex;gap:12px}
 .sc2{flex:1;text-align:center;padding:14px;border-radius:10px;border:1px solid transparent}
 .sc2.dima{background:rgba(21,101,192,.15);border-color:rgba(21,101,192,.3)}
@@ -285,10 +305,11 @@ input:focus{outline:none;border-color:var(--accent)}
         <div class="page-title">⚽ World Cup <span>2026</span></div>
         <div class="page-hint">June 11 – July 19 &bull; USA, Canada, Mexico</div>
       </div>
+      <!-- top row: standings + rules -->
       <div class="dash-grid">
         <div class="dash-card">
-          <h3>Today's Matches / Next Up</h3>
-          <div id="d-today"></div>
+          <h3>Current Standings</h3>
+          <div id="d-standings"></div>
         </div>
         <div class="dash-card">
           <h3>Scoring System</h3>
@@ -311,14 +332,16 @@ input:focus{outline:none;border-color:var(--accent)}
             </div>
           </div>
         </div>
-        <div class="dash-card">
-          <h3>Current Standings</h3>
-          <div id="d-standings"></div>
-        </div>
-        <div class="dash-card">
-          <h3>Recent Results</h3>
-          <div id="d-recent"></div>
-        </div>
+      </div>
+      <!-- full-width: predict next 3 days -->
+      <div class="dash-card" style="margin-bottom:16px">
+        <h3>Your Predictions — Next 3 Days</h3>
+        <div id="d-predict"></div>
+      </div>
+      <!-- full-width: recent results -->
+      <div class="dash-card">
+        <h3>Recent Results</h3>
+        <div id="d-recent"></div>
       </div>
     </div>
 
@@ -754,22 +777,58 @@ function getStatus(m){
 // ─────────────────────────────────────────
 //  RENDER: DASHBOARD
 // ─────────────────────────────────────────
+function next3Days(){
+  const days=[];
+  for(let i=0;i<3;i++){
+    const d=new Date(todayStr+'T12:00:00');
+    d.setDate(d.getDate()+i);
+    days.push(d.toISOString().slice(0,10));
+  }
+  return days;
+}
+
 function renderDash(){
   const all=allGrpMatches();
-  const todayM=all.filter(m=>m.d===todayStr);
-  const upcoming=all.filter(m=>m.d>todayStr&&!S.results[m.id]).slice(0,4);
-  const show=todayM.length?todayM:upcoming;
 
-  const todayEl=document.getElementById('d-today');
-  if(show.length){
-    todayEl.innerHTML=show.map(m=>`
-      <div class="row-match">
-        <div class="row-date" style="${m.d===todayStr?'color:var(--red);font-weight:800':''}">${m.d===todayStr?'TODAY':fmtDate(m.d)}</div>
-        <div class="row-teams">${fl(m.h)} ${m.h} vs ${m.a} ${fl(m.a)}</div>
-        <div class="row-grp">Grp ${m.grp}</div>
-      </div>`).join('');
+  // ── Predict: next 3 days ──
+  const days=next3Days();
+  const predictEl=document.getElementById('d-predict');
+  const upcoming=all.filter(m=>days.includes(m.d)&&!S.results[m.id]);
+
+  if(upcoming.length){
+    let html='';
+    days.forEach(day=>{
+      const dayMs=upcoming.filter(m=>m.d===day);
+      if(!dayMs.length)return;
+      const label=day===todayStr
+        ?`<span style="color:var(--red)">TODAY</span>`
+        :fmtDate(day);
+      html+=`<div class="up-day">${label}</div>`;
+      html+=dayMs.map(m=>{
+        const p=S.preds[S.user]?.[m.id];
+        const hasPred=p!=null;
+        return`<div class="up-match">
+          <div class="up-teams">
+            ${fl(m.h)} ${m.h} <span style="color:var(--dim);font-weight:400">vs</span> ${m.a} ${fl(m.a)}
+            <span class="up-venue">Grp ${m.grp} · ${m.v}</span>
+          </div>
+          <div class="up-inputs">
+            <input class="up-in" type="number" id="qi-h-${m.id}" min="0" max="20"
+              value="${hasPred?p.h:''}" placeholder="0">
+            <span class="up-dash">–</span>
+            <input class="up-in" type="number" id="qi-a-${m.id}" min="0" max="20"
+              value="${hasPred?p.a:''}" placeholder="0">
+          </div>
+          <button class="${hasPred?'up-saved':'up-save'}" id="qi-btn-${m.id}"
+            onclick="savePredQuick('${m.id}')">
+            ${hasPred?'✓ Saved':'Save'}
+          </button>
+        </div>`;
+      }).join('');
+    });
+    predictEl.innerHTML=html;
   }else{
-    todayEl.innerHTML='<div style="color:var(--dim);font-size:13px">Tournament complete!</div>';
+    predictEl.innerHTML='<div style="color:var(--dim);font-size:13px">No upcoming matches in the next 3 days</div>';
   }
 
   const allStats=Object.keys(USERS).map(u=>({u,s:userStats(u)}));
@@ -800,6 +859,33 @@ function renderDash(){
   }else{
     recEl.innerHTML='<div style="color:var(--dim);font-size:13px">No results yet</div>';
   }
+}
+
+async function savePredQuick(matchId){
+  const h=document.getElementById('qi-h-'+matchId).value;
+  const a=document.getElementById('qi-a-'+matchId).value;
+  if(h===''||a===''){toast('Enter both scores','err');return;}
+  if(!S.preds[S.user])S.preds[S.user]={};
+  S.preds[S.user][matchId]={h:+h,a:+a};
+  await saveS();
+  // update button to "saved" state without full re-render
+  const btn=document.getElementById('qi-btn-'+matchId);
+  if(btn){btn.textContent='✓ Saved';btn.className='up-saved';}
+  toast('Saved ✓','ok');
+  // refresh standings
+  const allStats=Object.keys(USERS).map(u=>({u,s:userStats(u)}));
+  const sorted=[...allStats].sort((a,b)=>b.s.tot-a.s.tot);
+  document.getElementById('d-standings').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${allStats.map(({u,s})=>`
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:22px;font-weight:800">${s.tot}</div>
+          <div style="font-size:12px;color:var(--dim)">${USERS[u].av} ${USERS[u].name}</div>
+        </div>`).join('')}
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--dim);text-align:center">
+      ${sorted[0].s.tot===sorted[1].s.tot?'Tied at the top! 🤝':`${USERS[sorted[0].u].av} ${USERS[sorted[0].u].name} is leading!`}
+    </div>`;
 }
 
 // ─────────────────────────────────────────
@@ -846,8 +932,11 @@ function renderMItem(m,g){
     ?`<div class="m-score"><div class="sn">${r.h}</div><span class="sep">–</span><div class="sn">${r.a}</div></div>`
     :`<div class="m-score"><div class="sn" style="color:var(--dim)">?</div><span class="sep">–</span><div class="sn" style="color:var(--dim)">?</div></div>`;
 
+  const isFinished=!!r;
   const predRow=`<div class="pred-row" style="flex-wrap:wrap">
     ${Object.keys(USERS).map(u=>{
+      // hide other users' predictions until match is finished
+      if(!isFinished&&u!==S.user)return'';
       const p=S.preds[u]?.[m.id];
       const p2=r?pts(p,r):null;
       return`<div class="pred-chip c-${u}" style="min-width:45%">
@@ -976,21 +1065,21 @@ function openMo(id){
   document.getElementById('res-chk').checked=!!r;
   document.getElementById('res-block').style.display=r?'block':'none';
 
-  // Other user's prediction + result info
-  const other=S.user==='dima'?'diego':'dima';
-  const op=S.preds[other]?.[id];
+  // Show other users' predictions only if match is finished
   const myP=S.preds[S.user]?.[id];
-  const oInfo=USERS[other];
   let predsHtml='';
 
-  if(op){
-    const opPts=r?pts(op,r):null;
-    predsHtml+=`<div class="mo-pred-row">
-      <span>${oInfo.av} ${oInfo.name}'s prediction: <strong>${op.h}–${op.a}</strong></span>
-      ${opPts!==null?`<span style="color:var(--green);font-weight:800">${opPts} pts</span>`:''}
-    </div>`;
-  }
   if(r){
+    // Match finished — show everyone's predictions
+    Object.keys(USERS).filter(u=>u!==S.user).forEach(u=>{
+      const op=S.preds[u]?.[id];
+      if(!op)return;
+      const opPts=pts(op,r);
+      predsHtml+=`<div class="mo-pred-row">
+        <span>${USERS[u].av} ${USERS[u].name}: <strong>${op.h}–${op.a}</strong></span>
+        ${opPts!==null?`<span style="color:var(--green);font-weight:800">${opPts} pts</span>`:''}
+      </div>`;
+    });
     const myPts=myP?pts(myP,r):null;
     predsHtml+=`<div class="mo-res-row">
       <span style="color:var(--accent)">⚽ Result: <strong>${r.h}–${r.a}</strong></span>
