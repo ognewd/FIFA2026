@@ -23,8 +23,11 @@ async function ensureSchema(db) {
 
 async function readData(db) {
   const { rows } = await db.query('SELECT key, value FROM game_data');
-  const out = { predictions: { dima: {}, diego: {} }, results: {} };
-  rows.forEach(r => { out[r.key] = r.value; });
+  const out = { predictions: { dima: {}, diego: {}, firuze: {}, stefan: {} }, results: {}, lastSync: null };
+  rows.forEach(r => {
+    if (r.key === 'last_sync') out.lastSync = r.value?.ts ?? null;
+    else out[r.key] = r.value;
+  });
   return out;
 }
 

@@ -303,7 +303,11 @@ input:focus{outline:none;border-color:var(--accent)}
     <div class="page active" id="pg-dash">
       <div class="page-hdr">
         <div class="page-title">⚽ World Cup <span>2026</span></div>
-        <div class="page-hint">June 11 – July 19 &bull; USA, Canada, Mexico</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="page-hint">June 11 – July 19 &bull; USA, Canada, Mexico</div>
+          <span id="sync-lbl" style="font-size:11px;color:var(--dim)"></span>
+          <button id="sync-btn" onclick="triggerSync()" style="padding:5px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--dim);cursor:pointer;font-size:12px;font-weight:700;transition:.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">🔄 Sync</button>
+        </div>
       </div>
       <!-- top row: standings + rules -->
       <div class="dash-grid">
@@ -627,7 +631,8 @@ let S = {
   results: {},
   gFilter: 'all',
   moId: null,
-  curPg: 'dash'
+  curPg: 'dash',
+  lastSync: null
 };
 
 async function loadS(){
@@ -637,14 +642,41 @@ async function loadS(){
       const d=await resp.json();
       S.preds=d.predictions||{dima:{},diego:{},firuze:{},stefan:{}};
       S.results=d.results||{};
+      S.lastSync=d.lastSync||null;
       localStorage.setItem('wc26_preds',JSON.stringify(S.preds));
       localStorage.setItem('wc26_results',JSON.stringify(S.results));
+      updateSyncIndicator();
       return;
     }
   }catch(e){}
   // fallback to localStorage (e.g. open as file://)
   try{const p=localStorage.getItem('wc26_preds');if(p)S.preds=JSON.parse(p);}catch(e){}
   try{const r=localStorage.getItem('wc26_results');if(r)S.results=JSON.parse(r);}catch(e){}
+}
+
+function updateSyncIndicator(){
+  const el=document.getElementById('sync-lbl');
+  if(!el)return;
+  if(!S.lastSync){el.textContent='Never synced';return;}
+  const ago=Math.round((Date.now()-S.lastSync)/60000);
+  el.textContent=ago<1?'Synced just now':ago===1?'Synced 1 min ago':`Synced ${ago} min ago`;
+}
+
+async function triggerSync(){
+  const btn=document.getElementById('sync-btn');
+  if(btn){btn.disabled=true;btn.textContent='Syncing...';}
+  try{
+    const r=await fetch('/api/sync',{method:'POST'});
+    const d=await r.json();
+    if(d.ok){
+      toast(`Synced: ${d.updated?.length||0} results updated`,'ok');
+      await loadS();
+      renderCurrent();
+    } else {
+      toast(d.reason||d.error||'Sync skipped','err');
+    }
+  }catch(e){toast('Sync failed','err');}
+  if(btn){btn.disabled=false;btn.textContent='🔄 Sync';}
 }
 
 async function saveS(){
@@ -1187,8 +1219,14 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMo();});
 })();
 
 // Auto-refresh every 15s so both users see live updates
+let _lastAutoSync=0;
 setInterval(async()=>{
   if(!S.user)return;
+  // Trigger API sync every 5 minutes from the frontend as fallback for cron
+  if(Date.now()-_lastAutoSync>5*60*1000){
+    _lastAutoSync=Date.now();
+    fetch('/api/sync').catch(()=>{});
+  }
   await loadS();
   renderCurrent();
 },15000);
