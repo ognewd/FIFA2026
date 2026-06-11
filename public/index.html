@@ -3,35 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ WC 2026 Predictions – Dima vs Diego</title>
+<title>⚽ WC 2026 — 1DT Picks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#060b14;--surface:#0d1526;--surface2:#141f35;--border:#1e2d45;
-  --accent:#d4a843;--accent2:#1565c0;--text:#e8edf5;--dim:#7a8ba0;
-  --green:#00c853;--red:#e53935;--orange:#ff8f00;
+  --bg:#111318;--surface:#1c1f27;--surface2:#252830;--border:#32374a;
+  --accent:#5eead4;--accent2:#6366f1;--text:#f0f2f8;--dim:#8892a4;
+  --green:#34d399;--red:#f87171;--orange:#fbbf24;
 }
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
 /* ── LOGIN ── */
 #login-page{display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:100vh;background:linear-gradient(135deg,#060b14 0%,#0d2545 100%)}
-.login-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
-  padding:40px;width:360px;text-align:center}
+  min-height:100vh;background:linear-gradient(135deg,#0d0f14 0%,#1a1f35 50%,#111a2a 100%)}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;
+  padding:40px;width:370px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5)}
 .login-trophy{font-size:56px;margin-bottom:16px}
 .login-title{font-size:24px;font-weight:800;color:var(--accent);margin-bottom:6px}
 .login-sub{font-size:13px;color:var(--dim);margin-bottom:28px}
 .user-select{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.user-btn{flex:1;padding:16px 10px;border:2px solid var(--border);border-radius:12px;
+.user-btn{flex:1;padding:16px 10px;border:2px solid var(--border);border-radius:16px;
   background:var(--surface2);color:var(--text);cursor:pointer;font-size:14px;font-weight:700;transition:.2s}
-.user-btn:hover,.user-btn.sel{border-color:var(--accent);background:rgba(212,168,67,.1)}
+.user-btn:hover,.user-btn.sel{border-color:var(--accent);background:rgba(94,234,212,.08)}
 .user-btn .av{font-size:32px;display:block;margin-bottom:6px}
 input[type=password],input[type=number],input[type=text]{
   width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);
   border-radius:8px;color:var(--text);font-size:14px;margin-bottom:10px}
 input:focus{outline:none;border-color:var(--accent)}
 .btn-primary{width:100%;padding:13px;background:var(--accent);color:#000;border:none;
-  border-radius:8px;font-size:15px;font-weight:800;cursor:pointer;transition:.15s}
+  border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;transition:.15s}
 .btn-primary:hover{opacity:.9}
 .login-err{color:var(--red);font-size:13px;margin-top:6px;min-height:18px}
 
@@ -45,7 +47,7 @@ input:focus{outline:none;border-color:var(--accent)}
 .nav-btn{padding:7px 14px;border:none;background:transparent;color:var(--dim);border-radius:8px;
   cursor:pointer;font-size:13px;font-weight:700;transition:.15s;white-space:nowrap}
 .nav-btn:hover{background:var(--surface2);color:var(--text)}
-.nav-btn.active{background:rgba(212,168,67,.15);color:var(--accent)}
+.nav-btn.active{background:rgba(94,234,212,.12);color:var(--accent)}
 .hdr-user{font-size:13px;font-weight:700;padding:5px 12px;background:var(--surface2);
   border-radius:20px;border:1px solid var(--border);white-space:nowrap}
 .logout-btn{padding:5px 10px;background:transparent;border:1px solid var(--border);
@@ -61,9 +63,9 @@ input:focus{outline:none;border-color:var(--accent)}
 /* ── DASHBOARD ── */
 .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 @media(max-width:700px){.dash-grid{grid-template-columns:1fr}}
-.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
-.dash-card h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
-  color:var(--dim);margin-bottom:14px}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px}
+.dash-card h3{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:14px;opacity:.8}
 .row-match{display:flex;align-items:center;gap:10px;padding:9px;background:var(--surface2);
   border-radius:8px;margin-bottom:8px;font-size:13px}
 .row-match:last-child{margin-bottom:0}
@@ -162,6 +164,7 @@ input:focus{outline:none;border-color:var(--accent)}
 .c-troels{background:rgba(49,27,146,.1);border:1px solid rgba(49,27,146,.25)}
 .c-madan{background:rgba(27,94,32,.1);border:1px solid rgba(27,94,32,.25)}
 .c-victoria{background:rgba(136,14,79,.1);border:1px solid rgba(136,14,79,.25)}
+.c-nor{background:rgba(2,119,189,.1);border:1px solid rgba(2,119,189,.25)}
 .pred-lbl{color:var(--dim)}
 .pred-val{font-weight:800}
 .pred-pts{color:var(--green);font-weight:800}
@@ -197,6 +200,7 @@ input:focus{outline:none;border-color:var(--accent)}
 .lb-card.troels{background:linear-gradient(135deg,rgba(49,27,146,.2),rgba(49,27,146,.05));border-color:rgba(49,27,146,.3)}
 .lb-card.madan{background:linear-gradient(135deg,rgba(27,94,32,.2),rgba(27,94,32,.05));border-color:rgba(27,94,32,.3)}
 .lb-card.victoria{background:linear-gradient(135deg,rgba(136,14,79,.2),rgba(136,14,79,.05));border-color:rgba(136,14,79,.3)}
+.lb-card.nor{background:linear-gradient(135deg,rgba(2,119,189,.2),rgba(2,119,189,.05));border-color:rgba(2,119,189,.3)}
 .lb-av{font-size:36px;margin-bottom:6px}
 .lb-nm{font-size:17px;font-weight:800;margin-bottom:4px}
 .lb-pts{font-size:38px;font-weight:900}
@@ -207,6 +211,7 @@ input:focus{outline:none;border-color:var(--accent)}
 .lb-card.troels .lb-pts{color:#b39ddb}
 .lb-card.madan .lb-pts{color:#a5d6a7}
 .lb-card.victoria .lb-pts{color:#f48fb1}
+.lb-card.nor .lb-pts{color:#81d4fa}
 .lb-plbl{font-size:11px;color:var(--dim);margin-bottom:10px}
 .stat-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
 .stc{padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700}
@@ -311,6 +316,9 @@ input:focus{outline:none;border-color:var(--accent)}
       <button class="user-btn" data-u="victoria" onclick="selUser('victoria',this)">
         <span class="av">👑</span>Victoria
       </button>
+      <button class="user-btn" data-u="nor" onclick="selUser('nor',this)">
+        <span class="av">🌊</span>Nor
+      </button>
     </div>
     <input type="password" id="pw" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn-primary" onclick="doLogin()">⚽ Login</button>
@@ -347,11 +355,11 @@ input:focus{outline:none;border-color:var(--accent)}
       <!-- top row: standings + rules -->
       <div class="dash-grid">
         <div class="dash-card">
-          <h3>Current Standings</h3>
+          <h3>Who's Winning 🏆</h3>
           <div id="d-standings"></div>
         </div>
         <div class="dash-card">
-          <h3>Scoring System</h3>
+          <h3>How Points Work</h3>
           <div class="rule-list">
             <div class="rule">
               <div class="rule-pt" style="background:rgba(0,200,83,.2);color:var(--green)">5</div>
@@ -374,12 +382,12 @@ input:focus{outline:none;border-color:var(--accent)}
       </div>
       <!-- full-width: predict next 3 days -->
       <div class="dash-card" style="margin-bottom:16px">
-        <h3>Your Predictions — Next 3 Days</h3>
+        <h3>Your Picks — Next 3 Days 🎯</h3>
         <div id="d-predict"></div>
       </div>
       <!-- full-width: recent results -->
       <div class="dash-card">
-        <h3>Recent Results</h3>
+        <h3>Latest Scores ⚽</h3>
         <div id="d-recent"></div>
       </div>
     </div>
@@ -418,7 +426,7 @@ input:focus{outline:none;border-color:var(--accent)}
             <thead>
               <tr>
                 <th>Match</th><th>Result</th>
-                <th>⚽ Dima</th><th>🏆 Diego</th><th>⭐ Firuze</th><th>🎯 Stefan</th><th>🦁 Simon</th><th>🌟 Moses</th><th>🔥 Sam</th><th>⚡ Troels</th><th>🎪 Madan</th><th>👑 Victoria</th>
+                <th>⚽ Dima</th><th>🏆 Diego</th><th>⭐ Firuze</th><th>🎯 Stefan</th><th>🦁 Simon</th><th>🌟 Moses</th><th>🔥 Sam</th><th>⚡ Troels</th><th>🎪 Madan</th><th>👑 Victoria</th><th>🌊 Nor</th>
               </tr>
             </thead>
             <tbody id="lb-tbody"></tbody>
@@ -488,7 +496,8 @@ const USERS = {
   sam:    { name:'Sam',    pw:'sam2026',    av:'🔥' },
   troels: { name:'Troels', pw:'troels2026', av:'⚡' },
   madan:    { name:'Madan',    pw:'madan2026',    av:'🎪' },
-  victoria: { name:'Victoria', pw:'victoria2026', av:'👑' }
+  victoria: { name:'Victoria', pw:'victoria2026', av:'👑' },
+  nor:      { name:'Nor',      pw:'nor2026',      av:'🌊' }
 };
 
 // ─────────────────────────────────────────
@@ -668,7 +677,7 @@ for(const rd of Object.values(KO)) rd.matches.forEach(m => KO_MAP[m.id]=m);
 // ─────────────────────────────────────────
 let S = {
   user: null,
-  preds: {dima:{},diego:{},firuze:{},stefan:{},simon:{},moses:{},sam:{},troels:{},madan:{},victoria:{}},
+  preds: {dima:{},diego:{},firuze:{},stefan:{},simon:{},moses:{},sam:{},troels:{},madan:{},victoria:{},nor:{}},
   results: {},
   gFilter: 'all',
   moId: null,
@@ -681,7 +690,7 @@ async function loadS(){
     const resp=await fetch('/api/data');
     if(resp.ok){
       const d=await resp.json();
-      S.preds=d.predictions||{dima:{},diego:{},firuze:{},stefan:{},simon:{},moses:{},sam:{},troels:{},madan:{},victoria:{}};
+      S.preds=d.predictions||{dima:{},diego:{},firuze:{},stefan:{},simon:{},moses:{},sam:{},troels:{},madan:{},victoria:{},nor:{}};
       S.results=d.results||{};
       S.lastSync=d.lastSync||null;
       localStorage.setItem('wc26_preds',JSON.stringify(S.preds));
