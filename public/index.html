@@ -156,6 +156,8 @@ input:focus{outline:none;border-color:var(--accent)}
 .c-diego{background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.22)}
 .c-firuze{background:rgba(123,31,162,.1);border:1px solid rgba(123,31,162,.25)}
 .c-stefan{background:rgba(46,125,50,.1);border:1px solid rgba(46,125,50,.25)}
+.c-simon{background:rgba(230,81,0,.1);border:1px solid rgba(230,81,0,.25)}
+.c-moses{background:rgba(0,131,143,.1);border:1px solid rgba(0,131,143,.25)}
 .pred-lbl{color:var(--dim)}
 .pred-val{font-weight:800}
 .pred-pts{color:var(--green);font-weight:800}
@@ -185,11 +187,14 @@ input:focus{outline:none;border-color:var(--accent)}
 .lb-card.diego{background:linear-gradient(135deg,rgba(212,168,67,.2),rgba(212,168,67,.05));border-color:rgba(212,168,67,.3)}
 .lb-card.firuze{background:linear-gradient(135deg,rgba(123,31,162,.2),rgba(123,31,162,.05));border-color:rgba(123,31,162,.3)}
 .lb-card.stefan{background:linear-gradient(135deg,rgba(46,125,50,.2),rgba(46,125,50,.05));border-color:rgba(46,125,50,.3)}
+.lb-card.simon{background:linear-gradient(135deg,rgba(230,81,0,.2),rgba(230,81,0,.05));border-color:rgba(230,81,0,.3)}
+.lb-card.moses{background:linear-gradient(135deg,rgba(0,131,143,.2),rgba(0,131,143,.05));border-color:rgba(0,131,143,.3)}
 .lb-av{font-size:36px;margin-bottom:6px}
 .lb-nm{font-size:17px;font-weight:800;margin-bottom:4px}
 .lb-pts{font-size:38px;font-weight:900}
 .lb-card.dima .lb-pts{color:#42a5f5}.lb-card.diego .lb-pts{color:var(--accent)}
 .lb-card.firuze .lb-pts{color:#ce93d8}.lb-card.stefan .lb-pts{color:#66bb6a}
+.lb-card.simon .lb-pts{color:#ffb74d}.lb-card.moses .lb-pts{color:#4dd0e1}
 .lb-plbl{font-size:11px;color:var(--dim);margin-bottom:10px}
 .stat-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
 .stc{padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700}
@@ -275,6 +280,12 @@ input:focus{outline:none;border-color:var(--accent)}
       </button>
       <button class="user-btn" data-u="stefan" onclick="selUser('stefan',this)">
         <span class="av">🎯</span>Stefan
+      </button>
+      <button class="user-btn" data-u="simon" onclick="selUser('simon',this)">
+        <span class="av">🦁</span>Simon
+      </button>
+      <button class="user-btn" data-u="moses" onclick="selUser('moses',this)">
+        <span class="av">🌟</span>Moses
       </button>
     </div>
     <input type="password" id="pw" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
@@ -383,7 +394,7 @@ input:focus{outline:none;border-color:var(--accent)}
             <thead>
               <tr>
                 <th>Match</th><th>Result</th>
-                <th>⚽ Dima</th><th>🏆 Diego</th><th>⭐ Firuze</th><th>🎯 Stefan</th>
+                <th>⚽ Dima</th><th>🏆 Diego</th><th>⭐ Firuze</th><th>🎯 Stefan</th><th>🦁 Simon</th><th>🌟 Moses</th>
               </tr>
             </thead>
             <tbody id="lb-tbody"></tbody>
@@ -447,7 +458,9 @@ const USERS = {
   dima:   { name:'Dima',   pw:'dima2026',   av:'⚽' },
   diego:  { name:'Diego',  pw:'diego2026',  av:'🏆' },
   firuze: { name:'Firuze', pw:'firuze2026', av:'⭐' },
-  stefan: { name:'Stefan', pw:'stefan2026', av:'🎯' }
+  stefan: { name:'Stefan', pw:'stefan2026', av:'🎯' },
+  simon:  { name:'Simon',  pw:'simon2026',  av:'🦁' },
+  moses:  { name:'Moses',  pw:'moses2026',  av:'🌟' }
 };
 
 // ─────────────────────────────────────────
@@ -627,7 +640,7 @@ for(const rd of Object.values(KO)) rd.matches.forEach(m => KO_MAP[m.id]=m);
 // ─────────────────────────────────────────
 let S = {
   user: null,
-  preds: {dima:{},diego:{},firuze:{},stefan:{}},
+  preds: {dima:{},diego:{},firuze:{},stefan:{},simon:{},moses:{}},
   results: {},
   gFilter: 'all',
   moId: null,
@@ -640,7 +653,7 @@ async function loadS(){
     const resp=await fetch('/api/data');
     if(resp.ok){
       const d=await resp.json();
-      S.preds=d.predictions||{dima:{},diego:{},firuze:{},stefan:{}};
+      S.preds=d.predictions||{dima:{},diego:{},firuze:{},stefan:{},simon:{},moses:{}};
       S.results=d.results||{};
       S.lastSync=d.lastSync||null;
       localStorage.setItem('wc26_preds',JSON.stringify(S.preds));
