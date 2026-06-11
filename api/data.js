@@ -16,7 +16,7 @@ async function ensureSchema(db) {
       value JSONB NOT NULL
     );
     INSERT INTO game_data (key, value)
-    VALUES ('predictions', '{"dima":{},"diego":{}}'), ('results', '{}')
+    VALUES ('predictions', '{"dima":{},"diego":{},"firuze":{},"stefan":{}}'), ('results', '{}')
     ON CONFLICT (key) DO NOTHING;
   `);
 }

@@ -21,7 +21,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .login-trophy{font-size:56px;margin-bottom:16px}
 .login-title{font-size:24px;font-weight:800;color:var(--accent);margin-bottom:6px}
 .login-sub{font-size:13px;color:var(--dim);margin-bottom:28px}
-.user-select{display:flex;gap:12px;margin-bottom:20px}
+.user-select{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
 .user-btn{flex:1;padding:16px 10px;border:2px solid var(--border);border-radius:12px;
   background:var(--surface2);color:var(--text);cursor:pointer;font-size:14px;font-weight:700;transition:.2s}
 .user-btn:hover,.user-btn.sel{border-color:var(--accent);background:rgba(212,168,67,.1)}
@@ -134,6 +134,8 @@ input:focus{outline:none;border-color:var(--accent)}
   display:flex;justify-content:space-between;align-items:center;gap:4px}
 .c-dima{background:rgba(21,101,192,.12);border:1px solid rgba(21,101,192,.25)}
 .c-diego{background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.22)}
+.c-firuze{background:rgba(123,31,162,.1);border:1px solid rgba(123,31,162,.25)}
+.c-stefan{background:rgba(46,125,50,.1);border:1px solid rgba(46,125,50,.25)}
 .pred-lbl{color:var(--dim)}
 .pred-val{font-weight:800}
 .pred-pts{color:var(--green);font-weight:800}
@@ -158,12 +160,16 @@ input:focus{outline:none;border-color:var(--accent)}
 .lb-wrap{max-width:720px;margin:0 auto}
 .lb-banner{display:flex;gap:14px;margin-bottom:24px}
 .lb-card{flex:1;padding:22px;border-radius:14px;border:1px solid var(--border);text-align:center}
+.lb-banner{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
 .lb-card.dima{background:linear-gradient(135deg,rgba(21,101,192,.2),rgba(21,101,192,.05));border-color:rgba(21,101,192,.3)}
 .lb-card.diego{background:linear-gradient(135deg,rgba(212,168,67,.2),rgba(212,168,67,.05));border-color:rgba(212,168,67,.3)}
+.lb-card.firuze{background:linear-gradient(135deg,rgba(123,31,162,.2),rgba(123,31,162,.05));border-color:rgba(123,31,162,.3)}
+.lb-card.stefan{background:linear-gradient(135deg,rgba(46,125,50,.2),rgba(46,125,50,.05));border-color:rgba(46,125,50,.3)}
 .lb-av{font-size:36px;margin-bottom:6px}
 .lb-nm{font-size:17px;font-weight:800;margin-bottom:4px}
 .lb-pts{font-size:38px;font-weight:900}
 .lb-card.dima .lb-pts{color:#42a5f5}.lb-card.diego .lb-pts{color:var(--accent)}
+.lb-card.firuze .lb-pts{color:#ce93d8}.lb-card.stefan .lb-pts{color:#66bb6a}
 .lb-plbl{font-size:11px;color:var(--dim);margin-bottom:10px}
 .stat-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
 .stc{padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700}
@@ -238,11 +244,17 @@ input:focus{outline:none;border-color:var(--accent)}
     <div class="login-title">FIFA World Cup 2026</div>
     <div class="login-sub">Predictions Challenge &bull; Dima vs Diego</div>
     <div class="user-select">
-      <button class="user-btn" data-u="dima" onclick="selUser('dima',this)">
-        <span class="av">🇷🇺</span>Dima
+      <button class="user-btn" data-u="dima"   onclick="selUser('dima',this)">
+        <span class="av">⚽</span>Dima
       </button>
-      <button class="user-btn" data-u="diego" onclick="selUser('diego',this)">
-        <span class="av">🇦🇷</span>Diego
+      <button class="user-btn" data-u="diego"  onclick="selUser('diego',this)">
+        <span class="av">🏆</span>Diego
+      </button>
+      <button class="user-btn" data-u="firuze" onclick="selUser('firuze',this)">
+        <span class="av">⭐</span>Firuze
+      </button>
+      <button class="user-btn" data-u="stefan" onclick="selUser('stefan',this)">
+        <span class="av">🎯</span>Stefan
       </button>
     </div>
     <input type="password" id="pw" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
@@ -344,8 +356,7 @@ input:focus{outline:none;border-color:var(--accent)}
             <thead>
               <tr>
                 <th>Match</th><th>Result</th>
-                <th>🇷🇺 Dima</th><th>Pts</th>
-                <th>🇦🇷 Diego</th><th>Pts</th>
+                <th>⚽ Dima</th><th>🏆 Diego</th><th>⭐ Firuze</th><th>🎯 Stefan</th>
               </tr>
             </thead>
             <tbody id="lb-tbody"></tbody>
@@ -406,8 +417,10 @@ input:focus{outline:none;border-color:var(--accent)}
 //  USERS
 // ─────────────────────────────────────────
 const USERS = {
-  dima:  { name:'Dima',  pw:'dima2026',  av:'🇷🇺' },
-  diego: { name:'Diego', pw:'diego2026', av:'🇦🇷' }
+  dima:   { name:'Dima',   pw:'dima2026',   av:'⚽' },
+  diego:  { name:'Diego',  pw:'diego2026',  av:'🏆' },
+  firuze: { name:'Firuze', pw:'firuze2026', av:'⭐' },
+  stefan: { name:'Stefan', pw:'stefan2026', av:'🎯' }
 };
 
 // ─────────────────────────────────────────
@@ -587,7 +600,7 @@ for(const rd of Object.values(KO)) rd.matches.forEach(m => KO_MAP[m.id]=m);
 // ─────────────────────────────────────────
 let S = {
   user: null,
-  preds: {dima:{},diego:{}},
+  preds: {dima:{},diego:{},firuze:{},stefan:{}},
   results: {},
   gFilter: 'all',
   moId: null,
@@ -599,7 +612,7 @@ async function loadS(){
     const resp=await fetch('/api/data');
     if(resp.ok){
       const d=await resp.json();
-      S.preds=d.predictions||{dima:{},diego:{}};
+      S.preds=d.predictions||{dima:{},diego:{},firuze:{},stefan:{}};
       S.results=d.results||{};
       localStorage.setItem('wc26_preds',JSON.stringify(S.preds));
       localStorage.setItem('wc26_results',JSON.stringify(S.results));
@@ -759,14 +772,18 @@ function renderDash(){
     todayEl.innerHTML='<div style="color:var(--dim);font-size:13px">Tournament complete!</div>';
   }
 
-  const ds=userStats('dima'),eg=userStats('diego');
+  const allStats=Object.keys(USERS).map(u=>({u,s:userStats(u)}));
+  const sorted=[...allStats].sort((a,b)=>b.s.tot-a.s.tot);
   document.getElementById('d-standings').innerHTML=`
-    <div class="score-box2">
-      <div class="sc2 dima"><div class="snum">${ds.tot}</div><div class="slbl">🇷🇺 Dima</div></div>
-      <div class="sc2 diego"><div class="snum">${eg.tot}</div><div class="slbl">🇦🇷 Diego</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${allStats.map(({u,s})=>`
+        <div class="sc2" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:22px;font-weight:800">${s.tot}</div>
+          <div style="font-size:12px;color:var(--dim)">${USERS[u].av} ${USERS[u].name}</div>
+        </div>`).join('')}
     </div>
     <div style="margin-top:10px;font-size:12px;color:var(--dim);text-align:center">
-      ${ds.tot===eg.tot?"It's a tie! 🤝":ds.tot>eg.tot?'🇷🇺 Dima is leading!':'🇦🇷 Diego is leading!'}
+      ${sorted[0].s.tot===sorted[1].s.tot?'Tied at the top! 🤝':`${USERS[sorted[0].u].av} ${USERS[sorted[0].u].name} is leading!`}
     </div>`;
 
   const finished=all.filter(m=>S.results[m.id]).slice(-4).reverse();
@@ -829,20 +846,16 @@ function renderMItem(m,g){
     ?`<div class="m-score"><div class="sn">${r.h}</div><span class="sep">–</span><div class="sn">${r.a}</div></div>`
     :`<div class="m-score"><div class="sn" style="color:var(--dim)">?</div><span class="sep">–</span><div class="sn" style="color:var(--dim)">?</div></div>`;
 
-  const dPts=r?pts(pd,r):null;
-  const ePts=r?pts(pe,r):null;
-
-  const predRow=`<div class="pred-row">
-    <div class="pred-chip c-dima">
-      <span class="pred-lbl">🇷🇺 Dima</span>
-      <span class="pred-val">${pd?pd.h+'-'+pd.a:'—'}</span>
-      ${dPts!==null?`<span class="pred-pts">${dPts}pt</span>`:''}
-    </div>
-    <div class="pred-chip c-diego">
-      <span class="pred-lbl">🇦🇷 Diego</span>
-      <span class="pred-val">${pe?pe.h+'-'+pe.a:'—'}</span>
-      ${ePts!==null?`<span class="pred-pts">${ePts}pt</span>`:''}
-    </div>
+  const predRow=`<div class="pred-row" style="flex-wrap:wrap">
+    ${Object.keys(USERS).map(u=>{
+      const p=S.preds[u]?.[m.id];
+      const p2=r?pts(p,r):null;
+      return`<div class="pred-chip c-${u}" style="min-width:45%">
+        <span class="pred-lbl">${USERS[u].av} ${USERS[u].name}</span>
+        <span class="pred-val">${p?p.h+'-'+p.a:'—'}</span>
+        ${p2!==null?`<span class="pred-pts">${p2}pt</span>`:''}
+      </div>`;
+    }).join('')}
   </div>`;
 
   return`<div class="m-item" onclick="openMo('${m.id}')">
@@ -892,50 +905,44 @@ function renderBracket(){
 //  RENDER: LEADERBOARD
 // ─────────────────────────────────────────
 function renderLB(){
-  const ds=userStats('dima'),eg=userStats('diego');
-  document.getElementById('lb-banner').innerHTML=`
-    <div class="lb-card dima">
-      <div class="lb-av">🇷🇺</div>
-      <div class="lb-nm">Dima</div>
-      <div class="lb-pts">${ds.tot}</div>
-      <div class="lb-plbl">POINTS</div>
-      <div class="stat-row">
-        <span class="stc stc-e">⭐ ${ds.ex} exact</span>
-        <span class="stc stc-c">✓ ${ds.cor} correct</span>
-        <span class="stc stc-w">✗ ${ds.wr} wrong</span>
-      </div>
-    </div>
-    <div class="lb-card diego">
-      <div class="lb-av">🇦🇷</div>
-      <div class="lb-nm">Diego</div>
-      <div class="lb-pts">${eg.tot}</div>
-      <div class="lb-plbl">POINTS</div>
-      <div class="stat-row">
-        <span class="stc stc-e">⭐ ${eg.ex} exact</span>
-        <span class="stc stc-c">✓ ${eg.cor} correct</span>
-        <span class="stc stc-w">✗ ${eg.wr} wrong</span>
-      </div>
-    </div>`;
+  document.getElementById('lb-banner').innerHTML=
+    Object.keys(USERS).map(u=>{
+      const s=userStats(u);
+      return`<div class="lb-card ${u}">
+        <div class="lb-av">${USERS[u].av}</div>
+        <div class="lb-nm">${USERS[u].name}</div>
+        <div class="lb-pts">${s.tot}</div>
+        <div class="lb-plbl">POINTS</div>
+        <div class="stat-row">
+          <span class="stc stc-e">⭐ ${s.ex}</span>
+          <span class="stc stc-c">✓ ${s.cor}</span>
+          <span class="stc stc-w">✗ ${s.wr}</span>
+        </div>
+      </div>`;
+    }).join('');
 
   const finished=allGrpMatches().filter(m=>S.results[m.id]);
   const tbody=document.getElementById('lb-tbody');
+  const ukeys=Object.keys(USERS);
   if(!finished.length){
-    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--dim);padding:18px">No completed matches yet</td></tr>';
+    tbody.innerHTML=`<tr><td colspan="${2+ukeys.length}" style="text-align:center;color:var(--dim);padding:18px">No completed matches yet</td></tr>`;
     return;
   }
 
   tbody.innerHTML=finished.map(m=>{
     const r=S.results[m.id];
-    const pd=S.preds.dima?.[m.id],pe=S.preds.diego?.[m.id];
-    const ptsd=pts(pd,r),ptse=pts(pe,r);
+    const userCells=ukeys.map(u=>{
+      const p=S.preds[u]?.[m.id];
+      const sc=pts(p,r);
+      const predStr=p?p.h+'-'+p.a:'<span style="color:var(--dim)">—</span>';
+      const ptsStr=sc!==null?`<span class="pb pb${sc}">${sc}</span>`:'';
+      return`<td>${predStr} ${ptsStr}</td>`;
+    }).join('');
     return`<tr>
       <td>${fl(m.h)} ${m.h} vs ${m.a} ${fl(m.a)}<br>
           <small style="color:var(--dim)">Grp ${m.grp} · ${fmtDate(m.d)}</small></td>
       <td><strong>${r.h}–${r.a}</strong></td>
-      <td>${pd?pd.h+'-'+pd.a:'<span style="color:var(--dim)">—</span>'}</td>
-      <td>${ptsd!==null?`<span class="pb pb${ptsd}">${ptsd}</span>`:'<span class="pb pb0">—</span>'}</td>
-      <td>${pe?pe.h+'-'+pe.a:'<span style="color:var(--dim)">—</span>'}</td>
-      <td>${ptse!==null?`<span class="pb pb${ptse}">${ptse}</span>`:'<span class="pb pb0">—</span>'}</td>
+      ${userCells}
     </tr>`;
   }).join('');
 }
