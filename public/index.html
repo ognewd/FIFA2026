@@ -432,7 +432,7 @@ input:focus{outline:none;border-color:var(--accent)}
     </label>
     <div class="mo-actions">
       <button class="btn-sec" onclick="closeMo()">Cancel</button>
-      <button class="btn-primary" onclick="saveMo()">Save ✓</button>
+      <button class="btn-primary" id="mo-save-btn" onclick="saveMo()">Save ✓</button>
     </div>
   </div>
 </div>
@@ -1097,6 +1097,18 @@ function openMo(id){
   document.getElementById('res-chk').checked=!!r;
   document.getElementById('res-block').style.display=r?'block':'none';
 
+  // If match is finished, lock prediction inputs
+  const finished=!!r;
+  const ph=document.getElementById('ph');
+  const pa=document.getElementById('pa');
+  ph.readOnly=finished;
+  pa.readOnly=finished;
+  ph.style.opacity=finished?'0.5':'1';
+  pa.style.opacity=finished?'0.5':'1';
+
+  const saveBtn=document.getElementById('mo-save-btn');
+  if(saveBtn) saveBtn.style.display=finished?'none':'block';
+
   // Show other users' predictions only if match is finished
   const myP=S.preds[S.user]?.[id];
   let predsHtml='';
@@ -1120,7 +1132,7 @@ function openMo(id){
   }
   document.getElementById('mo-preds').innerHTML=predsHtml;
   document.getElementById('modal').classList.add('open');
-  document.getElementById('ph').focus();
+  if(!finished) ph.focus();
 }
 
 function closeMo(){
@@ -1137,7 +1149,8 @@ async function saveMo(){
   if(!S.moId)return;
   const ph=document.getElementById('ph').value;
   const pa=document.getElementById('pa').value;
-  if(ph!==''&&pa!==''){
+  const isFinished=!!S.results[S.moId];
+  if(!isFinished&&ph!==''&&pa!==''){
     if(!S.preds[S.user])S.preds[S.user]={};
     S.preds[S.user][S.moId]={h:+ph,a:+pa};
   }
