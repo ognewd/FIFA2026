@@ -161,6 +161,7 @@ input:focus{outline:none;border-color:var(--accent)}
 .c-sam{background:rgba(183,28,28,.1);border:1px solid rgba(183,28,28,.25)}
 .c-troels{background:rgba(49,27,146,.1);border:1px solid rgba(49,27,146,.25)}
 .c-madan{background:rgba(27,94,32,.1);border:1px solid rgba(27,94,32,.25)}
+.c-victoria{background:rgba(136,14,79,.1);border:1px solid rgba(136,14,79,.25)}
 .pred-lbl{color:var(--dim)}
 .pred-val{font-weight:800}
 .pred-pts{color:var(--green);font-weight:800}
@@ -195,6 +196,7 @@ input:focus{outline:none;border-color:var(--accent)}
 .lb-card.sam{background:linear-gradient(135deg,rgba(183,28,28,.2),rgba(183,28,28,.05));border-color:rgba(183,28,28,.3)}
 .lb-card.troels{background:linear-gradient(135deg,rgba(49,27,146,.2),rgba(49,27,146,.05));border-color:rgba(49,27,146,.3)}
 .lb-card.madan{background:linear-gradient(135deg,rgba(27,94,32,.2),rgba(27,94,32,.05));border-color:rgba(27,94,32,.3)}
+.lb-card.victoria{background:linear-gradient(135deg,rgba(136,14,79,.2),rgba(136,14,79,.05));border-color:rgba(136,14,79,.3)}
 .lb-av{font-size:36px;margin-bottom:6px}
 .lb-nm{font-size:17px;font-weight:800;margin-bottom:4px}
 .lb-pts{font-size:38px;font-weight:900}
@@ -204,6 +206,7 @@ input:focus{outline:none;border-color:var(--accent)}
 .lb-card.sam .lb-pts{color:#ef9a9a}
 .lb-card.troels .lb-pts{color:#b39ddb}
 .lb-card.madan .lb-pts{color:#a5d6a7}
+.lb-card.victoria .lb-pts{color:#f48fb1}
 .lb-plbl{font-size:11px;color:var(--dim);margin-bottom:10px}
 .stat-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
 .stc{padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700}
@@ -304,6 +307,9 @@ input:focus{outline:none;border-color:var(--accent)}
       </button>
       <button class="user-btn" data-u="madan" onclick="selUser('madan',this)">
         <span class="av">🎪</span>Madan
+      </button>
+      <button class="user-btn" data-u="victoria" onclick="selUser('victoria',this)">
+        <span class="av">👑</span>Victoria
       </button>
     </div>
     <input type="password" id="pw" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
@@ -412,7 +418,7 @@ input:focus{outline:none;border-color:var(--accent)}
             <thead>
               <tr>
                 <th>Match</th><th>Result</th>
-                <th>⚽ Dima</th><th>🏆 Diego</th><th>⭐ Firuze</th><th>🎯 Stefan</th><th>🦁 Simon</th><th>🌟 Moses</th><th>🔥 Sam</th><th>⚡ Troels</th><th>🎪 Madan</th>
+                <th>⚽ Dima</th><th>🏆 Diego</th><th>⭐ Firuze</th><th>🎯 Stefan</th><th>🦁 Simon</th><th>🌟 Moses</th><th>🔥 Sam</th><th>⚡ Troels</th><th>🎪 Madan</th><th>👑 Victoria</th>
               </tr>
             </thead>
             <tbody id="lb-tbody"></tbody>
@@ -481,7 +487,8 @@ const USERS = {
   moses:  { name:'Moses',  pw:'moses2026',  av:'🌟' },
   sam:    { name:'Sam',    pw:'sam2026',    av:'🔥' },
   troels: { name:'Troels', pw:'troels2026', av:'⚡' },
-  madan:  { name:'Madan',  pw:'madan2026',  av:'🎪' }
+  madan:    { name:'Madan',    pw:'madan2026',    av:'🎪' },
+  victoria: { name:'Victoria', pw:'victoria2026', av:'👑' }
 };
 
 // ─────────────────────────────────────────
@@ -661,7 +668,7 @@ for(const rd of Object.values(KO)) rd.matches.forEach(m => KO_MAP[m.id]=m);
 // ─────────────────────────────────────────
 let S = {
   user: null,
-  preds: {dima:{},diego:{},firuze:{},stefan:{},simon:{},moses:{},sam:{},troels:{},madan:{}},
+  preds: {dima:{},diego:{},firuze:{},stefan:{},simon:{},moses:{},sam:{},troels:{},madan:{},victoria:{}},
   results: {},
   gFilter: 'all',
   moId: null,
@@ -674,7 +681,7 @@ async function loadS(){
     const resp=await fetch('/api/data');
     if(resp.ok){
       const d=await resp.json();
-      S.preds=d.predictions||{dima:{},diego:{},firuze:{},stefan:{},simon:{},moses:{},sam:{},troels:{},madan:{}};
+      S.preds=d.predictions||{dima:{},diego:{},firuze:{},stefan:{},simon:{},moses:{},sam:{},troels:{},madan:{},victoria:{}};
       S.results=d.results||{};
       S.lastSync=d.lastSync||null;
       localStorage.setItem('wc26_preds',JSON.stringify(S.preds));
