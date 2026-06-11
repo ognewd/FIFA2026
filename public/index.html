@@ -437,7 +437,7 @@ input:focus{outline:none;border-color:var(--accent)}
       </div>
     </div>
     <div class="mo-preds" id="mo-preds"></div>
-    <label class="chk-row">
+    <label class="chk-row" id="res-chk-row">
       <input type="checkbox" id="res-chk" onchange="toggleRes()">
       Enter / update actual match result
     </label>
@@ -1107,8 +1107,10 @@ function openMo(id){
   const r=S.results[id];
   document.getElementById('rh').value=r?r.h:'';
   document.getElementById('ra').value=r?r.a:'';
-  document.getElementById('res-chk').checked=!!r;
-  document.getElementById('res-block').style.display=r?'block':'none';
+  const isAdmin=S.user==='dima';
+  document.getElementById('res-chk-row').style.display=isAdmin?'flex':'none';
+  document.getElementById('res-chk').checked=!!r&&isAdmin;
+  document.getElementById('res-block').style.display=(r&&isAdmin)?'block':'none';
 
   // Predictions locked if match has result OR outside next-3-days window
   const predLocked=!!r||!next3Days().includes(m.d);
@@ -1166,7 +1168,7 @@ async function saveMo(){
     if(!S.preds[S.user])S.preds[S.user]={};
     S.preds[S.user][S.moId]={h:+ph,a:+pa};
   }
-  if(document.getElementById('res-chk').checked){
+  if(S.user==='dima'&&document.getElementById('res-chk').checked){
     const rh=document.getElementById('rh').value;
     const ra=document.getElementById('ra').value;
     if(rh!==''&&ra!=='') S.results[S.moId]={h:+rh,a:+ra};
