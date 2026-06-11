@@ -1097,8 +1097,8 @@ function openMo(id){
   document.getElementById('res-chk').checked=!!r;
   document.getElementById('res-block').style.display=r?'block':'none';
 
-  // If match is finished, lock prediction inputs
-  const finished=!!r;
+  // Lock if finished OR not in the editable window (next 3 days)
+  const finished=!!r||!next3Days().includes(m.d);
   const ph=document.getElementById('ph');
   const pa=document.getElementById('pa');
   ph.readOnly=finished;
