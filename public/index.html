@@ -188,34 +188,46 @@ input:focus{outline:none;border-color:var(--accent)}
 
 /* ── LEADERBOARD ── */
 .lb-wrap{max-width:720px;margin:0 auto}
-.lb-banner{display:flex;gap:14px;margin-bottom:24px}
-.lb-card{flex:1;padding:22px;border-radius:14px;border:1px solid var(--border);text-align:center}
-.lb-banner{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
-.lb-card.dima{background:linear-gradient(135deg,rgba(21,101,192,.2),rgba(21,101,192,.05));border-color:rgba(21,101,192,.3)}
-.lb-card.diego{background:linear-gradient(135deg,rgba(212,168,67,.2),rgba(212,168,67,.05));border-color:rgba(212,168,67,.3)}
-.lb-card.firuze{background:linear-gradient(135deg,rgba(123,31,162,.2),rgba(123,31,162,.05));border-color:rgba(123,31,162,.3)}
-.lb-card.stefan{background:linear-gradient(135deg,rgba(46,125,50,.2),rgba(46,125,50,.05));border-color:rgba(46,125,50,.3)}
-.lb-card.simon{background:linear-gradient(135deg,rgba(230,81,0,.2),rgba(230,81,0,.05));border-color:rgba(230,81,0,.3)}
-.lb-card.moses{background:linear-gradient(135deg,rgba(0,131,143,.2),rgba(0,131,143,.05));border-color:rgba(0,131,143,.3)}
-.lb-card.sam{background:linear-gradient(135deg,rgba(183,28,28,.2),rgba(183,28,28,.05));border-color:rgba(183,28,28,.3)}
-.lb-card.troels{background:linear-gradient(135deg,rgba(49,27,146,.2),rgba(49,27,146,.05));border-color:rgba(49,27,146,.3)}
-.lb-card.madan{background:linear-gradient(135deg,rgba(27,94,32,.2),rgba(27,94,32,.05));border-color:rgba(27,94,32,.3)}
-.lb-card.victoria{background:linear-gradient(135deg,rgba(136,14,79,.2),rgba(136,14,79,.05));border-color:rgba(136,14,79,.3)}
-.lb-card.nor{background:linear-gradient(135deg,rgba(2,119,189,.2),rgba(2,119,189,.05));border-color:rgba(2,119,189,.3)}
-.lb-card.per{background:linear-gradient(135deg,rgba(109,76,65,.2),rgba(109,76,65,.05));border-color:rgba(109,76,65,.3)}
-.lb-av{font-size:36px;margin-bottom:6px}
-.lb-nm{font-size:17px;font-weight:800;margin-bottom:4px}
-.lb-pts{font-size:38px;font-weight:900}
-.lb-card.dima .lb-pts{color:#42a5f5}.lb-card.diego .lb-pts{color:var(--accent)}
-.lb-card.firuze .lb-pts{color:#ce93d8}.lb-card.stefan .lb-pts{color:#66bb6a}
-.lb-card.simon .lb-pts{color:#ffb74d}.lb-card.moses .lb-pts{color:#4dd0e1}
-.lb-card.sam .lb-pts{color:#ef9a9a}
-.lb-card.troels .lb-pts{color:#b39ddb}
-.lb-card.madan .lb-pts{color:#a5d6a7}
-.lb-card.victoria .lb-pts{color:#f48fb1}
-.lb-card.nor .lb-pts{color:#81d4fa}
-.lb-card.per .lb-pts{color:#bcaaa4}
-.lb-plbl{font-size:11px;color:var(--dim);margin-bottom:10px}
+.lb-banner{display:block;margin-bottom:24px}
+
+/* podium */
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin:6px 0 24px}
+.pod-col{display:flex;flex-direction:column;align-items:center;width:130px;max-width:31%}
+.pod-trophy{font-size:42px;line-height:1;margin-bottom:4px;
+  animation:trophyBounce 2s ease-in-out infinite;
+  filter:drop-shadow(0 0 16px rgba(255,215,0,.55))}
+@keyframes trophyBounce{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-9px) rotate(3deg)}}
+.pod-av{font-size:34px;margin-bottom:2px}
+.pod-nm{font-size:14px;font-weight:800;margin-bottom:2px;text-align:center}
+.pod-pts{font-size:11px;color:var(--dim);margin-bottom:8px;text-align:center}
+.pod-pts b{color:var(--text);font-size:13px}
+.pod-step{width:100%;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;
+  font-size:24px;font-weight:900;transform-origin:bottom;animation:podGrow .7s ease-out}
+@keyframes podGrow{from{transform:scaleY(0)}}
+.pod-1 .pod-step{height:96px;background:linear-gradient(180deg,rgba(255,215,0,.85),rgba(184,134,11,.4));color:#2e2300}
+.pod-2 .pod-step{height:66px;background:linear-gradient(180deg,rgba(192,192,200,.75),rgba(120,120,130,.35));color:#15151c}
+.pod-3 .pod-step{height:46px;background:linear-gradient(180deg,rgba(205,127,50,.7),rgba(139,69,19,.35));color:#1f0f00}
+
+/* rest of the pack */
+.lbr-row{display:flex;align-items:center;gap:10px;background:var(--surface);
+  border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:8px;
+  flex-wrap:wrap;transition:.15s}
+.lbr-row:hover{border-color:var(--accent);transform:translateX(3px)}
+.lbr-rank{width:24px;text-align:center;font-weight:900;color:var(--dim);font-size:13px}
+.lbr-av{font-size:20px}
+.lbr-nm{width:74px;font-weight:800;font-size:13px}
+.lbr-bar{flex:1;min-width:90px;height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.lbr-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent2),var(--accent));
+  animation:barIn .9s ease-out}
+@keyframes barIn{from{width:0}}
+.lbr-pts{width:28px;text-align:right;font-weight:900;font-size:15px}
+
+/* dashboard → leaderboard link */
+.lb-link{display:block;width:100%;margin-bottom:16px;padding:12px;text-align:center;
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  color:var(--accent);font-size:13px;font-weight:800;cursor:pointer;transition:.15s;
+  font-family:inherit}
+.lb-link:hover{border-color:var(--accent);background:rgba(94,234,212,.06)}
 .stat-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
 .stc{padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700}
 .stc-e{background:rgba(0,200,83,.2);color:var(--green)}
@@ -386,6 +398,8 @@ input:focus{outline:none;border-color:var(--accent)}
           </div>
         </div>
       </div>
+      <!-- link to full leaderboard -->
+      <button class="lb-link" onclick="goPage('lb')">🏆 View full Leaderboard →</button>
       <!-- full-width: predict next 3 days -->
       <div class="dash-card" style="margin-bottom:16px">
         <h3>Your Picks — Next 3 Days 🎯</h3>
@@ -933,19 +947,7 @@ function renderDash(){
     predictEl.innerHTML='<div style="color:var(--dim);font-size:13px">No upcoming matches in the next 3 days</div>';
   }
 
-  const allStats=Object.keys(USERS).map(u=>({u,s:userStats(u)}));
-  const sorted=[...allStats].sort((a,b)=>b.s.tot-a.s.tot);
-  document.getElementById('d-standings').innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      ${allStats.map(({u,s})=>`
-        <div class="sc2" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:22px;font-weight:800">${s.tot}</div>
-          <div style="font-size:12px;color:var(--dim)">${USERS[u].av} ${USERS[u].name}</div>
-        </div>`).join('')}
-    </div>
-    <div style="margin-top:10px;font-size:12px;color:var(--dim);text-align:center">
-      ${sorted[0].s.tot===sorted[1].s.tot?'Tied at the top! 🤝':`${USERS[sorted[0].u].av} ${USERS[sorted[0].u].name} is leading!`}
-    </div>`;
+  updateStandings();
 
   const finished=all.filter(m=>S.results[m.id]).slice(-4).reverse();
   const recEl=document.getElementById('d-recent');
@@ -961,6 +963,34 @@ function renderDash(){
   }else{
     recEl.innerHTML='<div style="color:var(--dim);font-size:13px">No results yet</div>';
   }
+}
+
+// ── Race to the trophy (dashboard standings) ──
+function sortedStats(){
+  const st=Object.keys(USERS).map(u=>({u,s:userStats(u)}));
+  st.sort((a,b)=>b.s.tot-a.s.tot||USERS[a.u].name.localeCompare(USERS[b.u].name));
+  return st;
+}
+let _stCache='';
+function updateStandings(){
+  const el=document.getElementById('d-standings');
+  if(!el)return;
+  const allStats=Object.keys(USERS).map(u=>({u,s:userStats(u)}));
+  const sorted=[...allStats].sort((a,b)=>b.s.tot-a.s.tot);
+  const html=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${allStats.map(({u,s})=>`
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:22px;font-weight:800">${s.tot}</div>
+          <div style="font-size:12px;color:var(--dim)">${USERS[u].av} ${USERS[u].name}</div>
+        </div>`).join('')}
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--dim);text-align:center">
+      ${sorted[0].s.tot===sorted[1].s.tot?'Tied at the top! 🤝':`${USERS[sorted[0].u].av} ${USERS[sorted[0].u].name} is leading!`}
+    </div>`;
+  if(html===_stCache&&el.innerHTML!=='')return;
+  _stCache=html;
+  el.innerHTML=html;
 }
 
 function checkDirty(matchId){
@@ -988,20 +1018,7 @@ async function savePredQuick(matchId){
   const btn=document.getElementById('qi-btn-'+matchId);
   if(btn){btn.textContent='✓ Saved';btn.className='up-saved';btn.disabled=true;btn.onclick=null;}
   toast('Saved ✓','ok');
-  // refresh standings
-  const allStats=Object.keys(USERS).map(u=>({u,s:userStats(u)}));
-  const sorted=[...allStats].sort((a,b)=>b.s.tot-a.s.tot);
-  document.getElementById('d-standings').innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      ${allStats.map(({u,s})=>`
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:22px;font-weight:800">${s.tot}</div>
-          <div style="font-size:12px;color:var(--dim)">${USERS[u].av} ${USERS[u].name}</div>
-        </div>`).join('')}
-    </div>
-    <div style="margin-top:10px;font-size:12px;color:var(--dim);text-align:center">
-      ${sorted[0].s.tot===sorted[1].s.tot?'Tied at the top! 🤝':`${USERS[sorted[0].u].av} ${USERS[sorted[0].u].name} is leading!`}
-    </div>`;
+  updateStandings();
 }
 
 // ─────────────────────────────────────────
@@ -1110,21 +1127,37 @@ function renderBracket(){
 //  RENDER: LEADERBOARD
 // ─────────────────────────────────────────
 function renderLB(){
-  document.getElementById('lb-banner').innerHTML=
-    Object.keys(USERS).map(u=>{
-      const s=userStats(u);
-      return`<div class="lb-card ${u}">
-        <div class="lb-av">${USERS[u].av}</div>
-        <div class="lb-nm">${USERS[u].name}</div>
-        <div class="lb-pts">${s.tot}</div>
-        <div class="lb-plbl">POINTS</div>
-        <div class="stat-row">
-          <span class="stc stc-e">⭐ ${s.ex}</span>
-          <span class="stc stc-c">✓ ${s.cor}</span>
-          <span class="stc stc-w">✗ ${s.wr}</span>
-        </div>
-      </div>`;
-    }).join('');
+  const stats=sortedStats();
+  const max=Math.max(1,stats[0].s.tot);
+  const rankOf=x=>stats.findIndex(y=>y.s.tot===x.s.tot)+1;
+  const medals={1:'🥇',2:'🥈',3:'🥉'};
+
+  const podCol=(x,step)=>{
+    const r=rankOf(x);
+    return`<div class="pod-col pod-${step}">
+      ${step===1?'<div class="pod-trophy">🏆</div>':''}
+      <div class="pod-av">${USERS[x.u].av}</div>
+      <div class="pod-nm">${USERS[x.u].name}</div>
+      <div class="pod-pts"><b>${x.s.tot}</b> pts<br>⭐${x.s.ex} ✓${x.s.cor} ✗${x.s.wr}</div>
+      <div class="pod-step">${medals[r]||r}</div>
+    </div>`;
+  };
+  const podium=`<div class="podium">${podCol(stats[1],2)}${podCol(stats[0],1)}${podCol(stats[2],3)}</div>`;
+
+  const rest=stats.slice(3).map(x=>`<div class="lbr-row">
+      <div class="lbr-rank">${rankOf(x)}</div>
+      <div class="lbr-av">${USERS[x.u].av}</div>
+      <div class="lbr-nm">${USERS[x.u].name}</div>
+      <div class="lbr-bar"><div class="lbr-fill" style="width:${Math.max(2,(x.s.tot/max)*100)}%"></div></div>
+      <div class="lbr-pts">${x.s.tot}</div>
+      <div class="stat-row" style="flex-shrink:0">
+        <span class="stc stc-e">⭐ ${x.s.ex}</span>
+        <span class="stc stc-c">✓ ${x.s.cor}</span>
+        <span class="stc stc-w">✗ ${x.s.wr}</span>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('lb-banner').innerHTML=podium+rest;
 
   const finished=allGrpMatches().filter(m=>S.results[m.id]);
   const tbody=document.getElementById('lb-tbody');
