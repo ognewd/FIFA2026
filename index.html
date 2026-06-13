@@ -221,9 +221,11 @@ input:focus{outline:none;border-color:var(--accent)}
 .toast.ok{border-color:var(--green);color:var(--green)}
 .toast.err{border-color:var(--red);color:var(--red)}
 @media(max-width:600px){
-  .header{padding:0 10px;gap:6px}
+  .header{padding:8px 10px;gap:6px;height:auto;flex-wrap:wrap}
   .logo span{display:none}
-  .nav-btn{padding:6px 8px;font-size:12px}
+  .hdr-nav{order:3;width:100%;margin-left:0;justify-content:space-between}
+  .nav-btn{padding:6px 0;font-size:11px;flex:1;text-align:center}
+  .hdr-user{margin-left:auto}
   .main{padding:10px}
   .lb-banner{flex-direction:column}
 }
