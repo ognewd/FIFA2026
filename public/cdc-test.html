@@ -12,6 +12,7 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
 .sirvis-btn{display:inline-block;margin-bottom:24px;padding:10px 24px;background:#5eead4;color:#000;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none}
 .sirvis-btn:hover{opacity:.85}
 #gigya-container{width:100%;max-width:440px}
+#dbg{margin-top:12px;font-size:11px;color:#8892a4;text-align:center;min-height:16px}
 </style>
 <script type="text/javascript" src="https://cdns.eu1.gigya.com/js/gigya.js?apikey=4_1UqidRHbT3TrcmWly5oVKg"></script>
 </head>
@@ -20,23 +21,33 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
   <p>Screen Set: CCH-RegistrationLogin-SSO · eu1</p>
   <a class="sirvis-btn" href="https://730626274822.eu1.my.gigya-ext.com/pages/sirvis-login" target="_blank">Sirvis Login →</a>
   <div id="gigya-container"></div>
+  <div id="dbg"></div>
 
   <script>
+    var dbg = document.getElementById('dbg');
+    function log(msg) { dbg.textContent = msg; console.log('[CDC]', msg); }
+
     function onGigyaServiceReady() {
-      const params = new URLSearchParams(window.location.search);
-      const context = params.get('context');
-      const opts = {
+      var params = new URLSearchParams(window.location.search);
+      var context = params.get('context');
+      log(context ? 'OIDC context detected' : 'No OIDC context');
+
+      function doRedirect() {
+        if (!context) { log('onLogin fired — no context, skipping redirect'); return; }
+        try {
+          var payload = JSON.parse(atob(context.split('.')[1]));
+          log('onLogin fired — redirecting to finalizeOidcLogin…');
+          window.location.href = payload.redirect_url + 'context=' + encodeURIComponent(context);
+        } catch(e) { log('redirect error: ' + e.message); }
+      }
+
+      // global handler — catches login regardless of screen set internals
+      gigya.accounts.addEventHandlers({ onLogin: doRedirect });
+
+      var opts = {
         screenSet: 'CCH-RegistrationLogin-SSO',
         containerID: 'gigya-container',
-        onLogin: function() {
-          if (!context) return;
-          try {
-            const payload = JSON.parse(atob(context.split('.')[1]));
-            if (payload.redirect_url) {
-              window.location.href = payload.redirect_url + 'context=' + encodeURIComponent(context);
-            }
-          } catch(e) { console.error('OIDC redirect error', e); }
-        }
+        onLogin: doRedirect
       };
       if (context) opts.context = context;
       gigya.accounts.showScreenSet(opts);
