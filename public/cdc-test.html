@@ -27,7 +27,16 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
       const context = params.get('context');
       const opts = {
         screenSet: 'CCH-RegistrationLogin-SSO',
-        containerID: 'gigya-container'
+        containerID: 'gigya-container',
+        onLogin: function() {
+          if (!context) return;
+          try {
+            const payload = JSON.parse(atob(context.split('.')[1]));
+            if (payload.redirect_url) {
+              window.location.href = payload.redirect_url + 'context=' + encodeURIComponent(context);
+            }
+          } catch(e) { console.error('OIDC redirect error', e); }
+        }
       };
       if (context) opts.context = context;
       gigya.accounts.showScreenSet(opts);
