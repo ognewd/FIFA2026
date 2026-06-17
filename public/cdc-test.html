@@ -32,7 +32,7 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
     function completeOidc(context) {
       try {
         var payload = JSON.parse(atob(context.split('.')[1]));
-        var url = 'https://fidm.eu1.gigya.com/oidc/op/v1.0/' + API_KEY + '/authorize/continue?ctx_id=' + payload.ctx_id;
+        var url = 'https://fidm.eu1.gigya.com/oidc/op/v1.0/' + API_KEY + '/authorize/continue?ctx_id=' + payload.ctx_id + '&context=' + encodeURIComponent(context);
         log('Redirecting to authorize/continue…');
         window.location.href = url;
       } catch(e) {
