@@ -917,7 +917,7 @@ function renderDash(){
   if(upcoming.length){
     let html='';
     days.forEach(day=>{
-      const dayMs=upcoming.filter(m=>m.d===day);
+      const dayMs=upcoming.filter(m=>m.d===day).sort((a,b)=>(a.t||'99:99').localeCompare(b.t||'99:99'));
       if(!dayMs.length)return;
       const label=day===todayStr
         ?`<span style="color:var(--red)">TODAY</span>`
