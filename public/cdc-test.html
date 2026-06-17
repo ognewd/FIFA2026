@@ -14,8 +14,7 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
 #gigya-container{width:100%;max-width:440px}
 #dbg{margin-top:12px;font-size:11px;color:#8892a4;text-align:center;min-height:16px}
 </style>
-<!-- gigya.oidc.js (not gigya.js) — bootstraps the full SDK + handles OIDC context automatically -->
-<script type="text/javascript" src="https://cdns.eu1.gigya.com/js/gigya.oidc.js?apikey=4_1UqidRHbT3TrcmWly5oVKg"></script>
+<script type="text/javascript" src="https://cdns.eu1.gigya.com/js/gigya.js?apikey=4_1UqidRHbT3TrcmWly5oVKg"></script>
 </head>
 <body>
   <h1>CDC Login Test</h1>
@@ -28,30 +27,76 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
     var dbg = document.getElementById('dbg');
     function log(msg) { dbg.textContent = msg; console.log('[CDC]', msg); }
 
+    var API_KEY = '4_1UqidRHbT3TrcmWly5oVKg';
+
+    function completeOidc(context) {
+      try {
+        var payload = JSON.parse(atob(context.split('.')[1]));
+        var base = 'https://fidm.eu1.gigya.com/oidc/op/v1.0/' + API_KEY + '/authorize/continue?ctx_id=' + payload.ctx_id + '&context=' + encodeURIComponent(context);
+        log('Getting session JWT…');
+        gigya.accounts.getJWT({
+          fields: 'UID,profile,email',
+          callback: function(jwtRes) {
+            var url = base;
+            if (jwtRes.errorCode === 0 && jwtRes.id_token) {
+              url += '&id_token=' + encodeURIComponent(jwtRes.id_token);
+              log('JWT obtained — redirecting…');
+            } else {
+              log('No JWT (' + jwtRes.errorCode + ') — redirecting without…');
+            }
+            window.location.href = url;
+          }
+        });
+      } catch(e) {
+        log('Error: ' + e.message);
+        console.error(e);
+      }
+    }
+
     function onGigyaServiceReady() {
       var params = new URLSearchParams(window.location.search);
       var mode = params.get('mode');
+      var context = params.get('context');
 
-      // onOidc fires when the OIDC SDK completes the authorization handshake
-      gigya.accounts.addEventHandlers({
-        onOidc: function(oidcParams) {
-          log('onOidc: mode=' + oidcParams.mode);
-          console.log('[CDC] onOidc params:', oidcParams);
-        }
-      });
-
+      // Stop loop: if CDC sent us back with an error, just show login form
       if (mode === 'error') {
-        log('CDC error: ' + (params.get('errorMessage') || params.get('errorCode') || ''));
-      } else {
-        log(params.get('context') ? 'OIDC context — gigya.oidc.js will handle it' : 'No OIDC context');
+        var errCode = params.get('errorCode') || '';
+        var errMsg = params.get('errorMessage') || '';
+        log('CDC error: ' + errCode + ' — ' + errMsg);
+        // Show login for a fresh attempt — without the broken context
+        gigya.accounts.showScreenSet({
+          screenSet: 'CCH-RegistrationLogin-SSO',
+          containerID: 'gigya-container'
+        });
+        return;
       }
 
-      // Show screen set — gigya.oidc.js reads context from URL and handles
-      // authorize/continue + session automatically; no manual redirect needed
-      gigya.accounts.showScreenSet({
-        screenSet: 'CCH-RegistrationLogin-SSO',
-        containerID: 'gigya-container'
-      });
+      if (context) {
+        log('OIDC context detected — checking session…');
+        gigya.accounts.getAccountInfo({
+          callback: function(res) {
+            if (res.errorCode === 0) {
+              log('Active session — completing OIDC…');
+              completeOidc(context);
+            } else {
+              log('No session — showing login form');
+              gigya.accounts.showScreenSet({
+                screenSet: 'CCH-RegistrationLogin-SSO',
+                containerID: 'gigya-container',
+                onLogin: function() {
+                  log('Login OK — completing OIDC…');
+                  completeOidc(context);
+                }
+              });
+            }
+          }
+        });
+      } else {
+        gigya.accounts.showScreenSet({
+          screenSet: 'CCH-RegistrationLogin-SSO',
+          containerID: 'gigya-container'
+        });
+      }
     }
   </script>
 </body>
