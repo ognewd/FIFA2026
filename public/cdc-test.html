@@ -57,6 +57,15 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
         }
       }
     });
+
+    // Прямой заход без OIDC context — показываем форму обычно
+    if (!params.get('context')) {
+      log('Direct load — showing screen set…');
+      gigya.accounts.showScreenSet({
+        screenSet:   'CCH-RegistrationLogin-SSO',
+        containerID: 'gigya-container'
+      });
+    }
   }
   </script>
 </body>
