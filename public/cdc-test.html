@@ -29,7 +29,14 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
 
     function completeOidc(context) {
       log('Completing OIDC flow via redirectToContinue…');
-      gigya.fidm.oidc.op.redirectToContinue(context);
+      try {
+        var payload = JSON.parse(atob(context.split('.')[1]));
+        // try ctx_id first, then fall back to no-arg (reads from URL)
+        gigya.fidm.oidc.op.redirectToContinue({ ctx_id: payload.ctx_id });
+      } catch(e) {
+        log('Error: ' + e.message);
+        console.error(e);
+      }
     }
 
     function onGigyaServiceReady() {
