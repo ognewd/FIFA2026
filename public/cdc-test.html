@@ -43,25 +43,33 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
 
     function onGigyaServiceReady() {
       var params = new URLSearchParams(window.location.search);
+      var mode = params.get('mode');
       var context = params.get('context');
 
+      // Stop loop: if CDC sent us back with an error, just show login form
+      if (mode === 'error') {
+        var errCode = params.get('errorCode') || '';
+        var errMsg = params.get('errorMessage') || '';
+        log('CDC error: ' + errCode + ' — ' + errMsg);
+        // Show login for a fresh attempt — without the broken context
+        gigya.accounts.showScreenSet({
+          screenSet: 'CCH-RegistrationLogin-SSO',
+          containerID: 'gigya-container'
+        });
+        return;
+      }
+
       if (context) {
-        log('OIDC context detected — checking session…');
-        gigya.accounts.getAccountInfo({
-          callback: function(res) {
-            if (res.errorCode === 0) {
-              log('Active session found — completing OIDC…');
-              completeOidc(context);
-            } else {
-              log('No session — showing login form');
-              gigya.accounts.showScreenSet({
-                screenSet: 'CCH-RegistrationLogin-SSO',
-                containerID: 'gigya-container',
-                onLogin: function() {
-                  completeOidc(context);
-                }
-              });
-            }
+        log('OIDC context detected — showing login form');
+        // Don't check session first — calling getAccountInfo before
+        // authorize/continue can invalidate the ctx_id on CDC's side.
+        // Just show the login form. If session exists CDC will handle it.
+        gigya.accounts.showScreenSet({
+          screenSet: 'CCH-RegistrationLogin-SSO',
+          containerID: 'gigya-container',
+          onLogin: function() {
+            log('Login OK — completing OIDC…');
+            completeOidc(context);
           }
         });
       } else {
