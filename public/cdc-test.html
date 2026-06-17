@@ -23,10 +23,14 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
 
   <script>
     function onGigyaServiceReady() {
-      gigya.accounts.showScreenSet({
+      const params = new URLSearchParams(window.location.search);
+      const context = params.get('context');
+      const opts = {
         screenSet: 'CCH-RegistrationLogin-SSO',
         containerID: 'gigya-container'
-      });
+      };
+      if (context) opts.context = context;
+      gigya.accounts.showScreenSet(opts);
     }
   </script>
 </body>
