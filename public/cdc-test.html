@@ -60,16 +60,23 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
       }
 
       if (context) {
-        log('OIDC context detected — showing login form');
-        // Don't check session first — calling getAccountInfo before
-        // authorize/continue can invalidate the ctx_id on CDC's side.
-        // Just show the login form. If session exists CDC will handle it.
-        gigya.accounts.showScreenSet({
-          screenSet: 'CCH-RegistrationLogin-SSO',
-          containerID: 'gigya-container',
-          onLogin: function() {
-            log('Login OK — completing OIDC…');
-            completeOidc(context);
+        log('OIDC context detected — checking session…');
+        gigya.accounts.getAccountInfo({
+          callback: function(res) {
+            if (res.errorCode === 0) {
+              log('Active session — completing OIDC…');
+              completeOidc(context);
+            } else {
+              log('No session — showing login form');
+              gigya.accounts.showScreenSet({
+                screenSet: 'CCH-RegistrationLogin-SSO',
+                containerID: 'gigya-container',
+                onLogin: function() {
+                  log('Login OK — completing OIDC…');
+                  completeOidc(context);
+                }
+              });
+            }
           }
         });
       } else {
