@@ -27,6 +27,11 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
     var dbg = document.getElementById('dbg');
     function log(msg) { dbg.textContent = msg; console.log('[CDC]', msg); }
 
+    function completeOidc(context) {
+      log('Completing OIDC flow via redirectToContinue…');
+      gigya.fidm.oidc.op.redirectToContinue(context);
+    }
+
     function onGigyaServiceReady() {
       var params = new URLSearchParams(window.location.search);
       var context = params.get('context');
@@ -36,39 +41,26 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
         gigya.accounts.getAccountInfo({
           callback: function(res) {
             if (res.errorCode === 0) {
-              // Active session: re-authenticate silently by logging out first,
-              // then CDC will redirect after re-login via the screen set
-              log('Active session — logging out to allow OIDC re-auth…');
-              gigya.accounts.logout({
-                callback: function() {
-                  log('Logged out — showing login form');
-                  showScreenSet(context);
-                }
-              });
+              log('Active session found — completing OIDC…');
+              completeOidc(context);
             } else {
               log('No session — showing login form');
-              showScreenSet(context);
+              gigya.accounts.showScreenSet({
+                screenSet: 'CCH-RegistrationLogin-SSO',
+                containerID: 'gigya-container',
+                onLogin: function() {
+                  completeOidc(context);
+                }
+              });
             }
           }
         });
       } else {
-        showScreenSet(null);
+        gigya.accounts.showScreenSet({
+          screenSet: 'CCH-RegistrationLogin-SSO',
+          containerID: 'gigya-container'
+        });
       }
-    }
-
-    function showScreenSet(context) {
-      // Pass context so CDC SDK knows this is an OIDC login flow
-      // and handles the redirect to finalizeOidcLogin with auth code automatically
-      var opts = {
-        screenSet: 'CCH-RegistrationLogin-SSO',
-        containerID: 'gigya-container',
-        onLogin: function(res) {
-          log('Login OK — CDC should redirect…');
-          console.log('[CDC] onLogin response:', res);
-        }
-      };
-      if (context) opts.context = context;
-      gigya.accounts.showScreenSet(opts);
     }
   </script>
 </body>
