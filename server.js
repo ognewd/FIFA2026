@@ -5,6 +5,7 @@ const path = require('path');
 const app = express();
 app.use(express.json({ limit: '1mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.get('/cdc-test', (_req, res) => res.sendFile(path.join(__dirname, 'public/cdc-test.html')));
 
 // ─── Storage backend ──────────────────────────────────────────────────────────
 
