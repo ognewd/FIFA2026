@@ -34,6 +34,7 @@ p{font-size:12px;color:#8892a4;margin-bottom:16px}
   function log(msg) { dbg.textContent = msg; console.log('[CDC]', msg); }
 
   function onGigyaServiceReady() {
+    debugger;
     var params = new URLSearchParams(window.location.search);
 
     if (params.get('mode') === 'error') {
