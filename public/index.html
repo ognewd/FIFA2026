@@ -1133,7 +1133,7 @@ function renderBracket(){
     const matchHtml=rd.matches.map(m=>{
       const r=S.results[m.id];
       const rh=r?+r.h:null,ra=r?+r.a:null;
-      return`<div class="b-match" onclick="openMo('${m.id}')">
+      return`<div class="b-match" style="cursor:default;opacity:0.6">
         <div class="b-team ${r&&rh>ra?'win':''}">${m.h}${r?`<span class="b-team-s">${r.h}</span>`:''}</div>
         <div class="b-team ${r&&ra>rh?'win':''}">${m.a}${r?`<span class="b-team-s">${r.a}</span>`:''}</div>
       </div>`;
