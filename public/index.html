@@ -523,18 +523,18 @@ input:focus{outline:none;border-color:var(--accent)}
 //  USERS
 // ─────────────────────────────────────────
 const USERS = {
-  nor:      { name:'Nor',      pw:'nor2026',      av:'🌊' },
-  dima:   { name:'Dima',   pw:'dima2026',   av:'⚽' },
-  diego:  { name:'Diego',  pw:'diego2026',  av:'🏆' },
-  firuze: { name:'Firuze', pw:'firuze2026', av:'⭐' },
-  stefan: { name:'Stefan', pw:'stefan2026', av:'🎯' },
-  simon:  { name:'Simon',  pw:'simon2026',  av:'🦁' },
-  moses:  { name:'Moses',  pw:'moses2026',  av:'🌟' },
-  sam:    { name:'Sam',    pw:'sam2026',    av:'🔥' },
-  troels: { name:'Troels', pw:'troels2026', av:'⚡' },
-  madan:    { name:'Madan',    pw:'madan2026',    av:'🎪' },
-  victoria: { name:'Victoria', pw:'victoria2026', av:'👑' },
-  per:      { name:'Per',      pw:'per2026',      av:'🦅' }
+  nor:      { name:'Nor',      av:'🌊' },
+  dima:     { name:'Dima',     av:'⚽' },
+  diego:    { name:'Diego',    av:'🏆' },
+  firuze:   { name:'Firuze',   av:'⭐' },
+  stefan:   { name:'Stefan',   av:'🎯' },
+  simon:    { name:'Simon',    av:'🦁' },
+  moses:    { name:'Moses',    av:'🌟' },
+  sam:      { name:'Sam',      av:'🔥' },
+  troels:   { name:'Troels',   av:'⚡' },
+  madan:    { name:'Madan',    av:'🎪' },
+  victoria: { name:'Victoria', av:'👑' },
+  per:      { name:'Per',      av:'🦅' }
 };
 
 // ─────────────────────────────────────────
@@ -770,11 +770,11 @@ async function saveS(){
   localStorage.setItem('wc26_preds',JSON.stringify(S.preds));
   localStorage.setItem('wc26_results',JSON.stringify(S.results));
   try{
-    await fetch('/api/data',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({predictions:S.preds,results:S.results})
-    });
+    const tok=localStorage.getItem('wc26_token');
+    const hdrs={'Content-Type':'application/json'};
+    if(tok)hdrs['Authorization']='Bearer '+tok;
+    const r=await fetch('/api/data',{method:'POST',headers:hdrs,body:JSON.stringify({predictions:S.preds,results:S.results})});
+    if(r.status===401){doLogout();}
   }catch(e){}
 }
 
@@ -790,24 +790,27 @@ function selUser(u,el){
   document.getElementById('pw').focus();
 }
 
-function doLogin(){
+async function doLogin(){
   if(!_selUser){document.getElementById('lerr').textContent='Select a player first.';return;}
   const pw=document.getElementById('pw').value;
-  if(pw!==USERS[_selUser].pw){
-    document.getElementById('lerr').textContent='Wrong password, try again.';
-    document.getElementById('pw').value='';return;
-  }
-  S.user=_selUser;
-  sessionStorage.setItem('wc26_user',_selUser);
-  document.getElementById('login-page').style.display='none';
-  document.getElementById('app').style.display='block';
-  document.getElementById('hdr-user').textContent=USERS[_selUser].av+' '+USERS[_selUser].name;
-  initApp();
+  if(!pw){document.getElementById('lerr').textContent='Enter your password.';return;}
+  document.getElementById('lerr').textContent='';
+  try{
+    const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:_selUser,password:pw})});
+    const d=await r.json();
+    if(!r.ok){document.getElementById('lerr').textContent=d.error||'Login failed';document.getElementById('pw').value='';return;}
+    localStorage.setItem('wc26_token',d.token);
+    S.user=d.username;
+    document.getElementById('login-page').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('hdr-user').textContent=(USERS[d.username]?.av||d.avatar)+' '+(USERS[d.username]?.name||d.name);
+    initApp();
+  }catch(e){document.getElementById('lerr').textContent='Network error, try again.';}
 }
 
 function doLogout(){
   S.user=null;
-  sessionStorage.removeItem('wc26_user');
+  localStorage.removeItem('wc26_token');
   document.getElementById('login-page').style.display='flex';
   document.getElementById('app').style.display='none';
   document.getElementById('pw').value='';
@@ -1366,13 +1369,21 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMo();});
 
 (async()=>{
   await loadS();
-  const savedUser=sessionStorage.getItem('wc26_user');
-  if(savedUser&&USERS[savedUser]){
-    S.user=savedUser;
-    document.getElementById('login-page').style.display='none';
-    document.getElementById('app').style.display='block';
-    document.getElementById('hdr-user').textContent=USERS[savedUser].av+' '+USERS[savedUser].name;
-    initApp();
+  const tok=localStorage.getItem('wc26_token');
+  if(tok){
+    try{
+      const r=await fetch('/api/me',{headers:{'Authorization':'Bearer '+tok}});
+      if(r.ok){
+        const d=await r.json();
+        S.user=d.username;
+        document.getElementById('login-page').style.display='none';
+        document.getElementById('app').style.display='block';
+        document.getElementById('hdr-user').textContent=(USERS[d.username]?.av||d.avatar)+' '+(USERS[d.username]?.name||d.name);
+        initApp();
+      } else {
+        localStorage.removeItem('wc26_token');
+      }
+    }catch(e){ localStorage.removeItem('wc26_token'); }
   }
 })();
 
