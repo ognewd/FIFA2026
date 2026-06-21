@@ -177,16 +177,25 @@ app.post('/api/data', requireAuth, async (req, res) => {
 
 app.get('/health', (_req, res) => res.json({ ok: true, db: !!db }));
 
+// ─── SPA fallback ─────────────────────────────────────────────────────────────
+
+app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+
 // ─── Start ────────────────────────────────────────────────────────────────────
 
 const PORT = process.env.PORT || 3000;
 
-(async () => {
+const _init = (async () => {
   if (process.env.DATABASE_URL) {
     await initDB();
   } else {
     console.log('ℹ️  No DATABASE_URL — using data.json + seed users for auth');
     if (!fs.existsSync(DATA_FILE)) fileWrite(DEFAULT);
   }
-  app.listen(PORT, () => console.log(`⚽ WC 2026 running at http://localhost:${PORT}`));
-})();
+})().catch(e => console.error('Startup error:', e));
+
+if (require.main === module) {
+  _init.then(() => app.listen(PORT, () => console.log(`⚽ WC 2026 running at http://localhost:${PORT}`)));
+}
+
+module.exports = app;
