@@ -906,6 +906,19 @@ function next3Days(){
   return days;
 }
 
+function matchStarted(m){
+  if(m.d<todayStr)return true;
+  if(m.d>todayStr)return false;
+  // Today — check CET kickoff time (CEST = UTC+2 in summer)
+  if(!m.t)return true;
+  const[h,min]=m.t.split(':').map(Number);
+  const nowCETMin=(new Date().getTime()/60000)%(24*60)+120; // UTC minutes + 2h offset
+  const nowUTC=new Date();
+  const nowCETHour=nowUTC.getUTCHours()+2;
+  const nowCETMinute=nowUTC.getUTCMinutes();
+  return nowCETHour*60+nowCETMinute>=h*60+min;
+}
+
 function renderDash(){
   const all=allGrpMatches();
 
@@ -926,9 +939,7 @@ function renderDash(){
       html+=dayMs.map(m=>{
         const p=S.preds[S.user]?.[m.id];
         const hasPred=p!=null;
-        // Re-editing saved prediction locked on match day; new prediction still allowed
-        const canReedit=m.d>todayStr;
-        const locked=hasPred&&!canReedit;
+        const locked=matchStarted(m);
         // Preserve unsaved (dirty) values across auto-refresh
         const existH=document.getElementById('qi-h-'+m.id);
         const existA=document.getElementById('qi-a-'+m.id);
@@ -1232,8 +1243,8 @@ function openMo(id){
   document.getElementById('res-chk').checked=!!r&&isAdmin;
   document.getElementById('res-block').style.display=(r&&isAdmin)?'block':'none';
 
-  // Predictions locked if match has result OR outside next-3-days window
-  const predLocked=!!r||!next3Days().includes(m.d);
+  // Predictions locked if match has result OR match has already started
+  const predLocked=!!r||matchStarted(m);
   const ph=document.getElementById('ph');
   const pa=document.getElementById('pa');
   ph.readOnly=predLocked;
@@ -1283,7 +1294,7 @@ async function saveMo(){
   const ph=document.getElementById('ph').value;
   const pa=document.getElementById('pa').value;
   const m2=findM(S.moId);
-  const predLocked=!!S.results[S.moId]||!next3Days().includes(m2?.d);
+  const predLocked=!!S.results[S.moId]||matchStarted(m2);
   if(!predLocked&&ph!==''&&pa!==''){
     if(!S.preds[S.user])S.preds[S.user]={};
     S.preds[S.user][S.moId]={h:+ph,a:+pa};
