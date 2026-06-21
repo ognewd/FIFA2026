@@ -139,11 +139,25 @@ app.post('/api/login', async (req, res) => {
     if (!username || !password) return res.status(400).json({ error: 'Missing credentials' });
 
     if (db) {
-      const { rows } = await db.query('SELECT * FROM users WHERE username=$1', [username.toLowerCase()]);
-      const user = rows[0];
-      if (!user) return res.status(401).json({ error: 'Invalid credentials' });
-      const ok = await bcrypt.compare(password, user.password_hash);
-      if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
+      const uname = username.toLowerCase();
+      let { rows } = await db.query('SELECT * FROM users WHERE username=$1', [uname]);
+      let user = rows[0];
+
+      if (!user) {
+        // User missing from DB (seeding race or timeout) — auto-create from seed list
+        const seed = SEED_USERS.find(u => u.username === uname);
+        if (!seed || seed.pw !== password) return res.status(401).json({ error: 'Invalid credentials' });
+        const hash = await bcrypt.hash(password, 10);
+        await db.query(
+          'INSERT INTO users (username, name, avatar, password_hash, is_admin) VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING',
+          [seed.username, seed.name, seed.avatar, hash, seed.username === 'dima']
+        );
+        user = { username: seed.username, name: seed.name, avatar: seed.avatar, is_admin: seed.username === 'dima' };
+      } else {
+        const ok = await bcrypt.compare(password, user.password_hash);
+        if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
       const token = jwt.sign(
         { username: user.username, name: user.name, avatar: user.avatar, isAdmin: user.is_admin },
         JWT_SECRET, { expiresIn: JWT_EXPIRES }
