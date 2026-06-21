@@ -70,26 +70,28 @@ async function initDB() {
     );
   `);
 
-  // Seed users if table is empty
-  const { rowCount } = await db.query('SELECT 1 FROM users LIMIT 1');
-  if (rowCount === 0) {
-    console.log('🌱 Seeding users…');
-    for (const u of SEED_USERS) {
-      const hash = await bcrypt.hash(u.pw, 12);
+  // Migration: rename vic → victoria
+  const { rowCount: vicRows } = await db.query("SELECT 1 FROM users WHERE username='vic'");
+  if (vicRows > 0) {
+    const hash = await bcrypt.hash('victoria2026', 10);
+    await db.query("UPDATE users SET username='victoria', password_hash=$1 WHERE username='vic'", [hash]);
+    console.log('✅ Migrated vic → victoria');
+  }
+
+  // Seed any missing users (rounds=10 keeps cold-start under ~1s for 12 users)
+  const { rows: existing } = await db.query('SELECT username FROM users');
+  const existingSet = new Set(existing.map(r => r.username));
+  const missing = SEED_USERS.filter(u => !existingSet.has(u.username));
+  if (missing.length > 0) {
+    console.log(`🌱 Seeding ${missing.length} missing user(s)…`);
+    for (const u of missing) {
+      const hash = await bcrypt.hash(u.pw, 10);
       await db.query(
         'INSERT INTO users (username, name, avatar, password_hash, is_admin) VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING',
         [u.username, u.name, u.avatar, hash, u.username === 'dima']
       );
+      console.log(`  ✓ ${u.username}`);
     }
-    console.log('✅ Users seeded');
-  }
-
-  // Migration: rename vic → victoria
-  const { rowCount: vicRows } = await db.query("SELECT 1 FROM users WHERE username='vic'");
-  if (vicRows > 0) {
-    const hash = await bcrypt.hash('victoria2026', 12);
-    await db.query("UPDATE users SET username='victoria', password_hash=$1 WHERE username='vic'", [hash]);
-    console.log('✅ Migrated vic → victoria');
   }
 
   console.log('✅ PostgreSQL connected');
