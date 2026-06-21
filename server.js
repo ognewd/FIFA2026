@@ -84,6 +84,14 @@ async function initDB() {
     console.log('✅ Users seeded');
   }
 
+  // Migration: rename vic → victoria
+  const { rowCount: vicRows } = await db.query("SELECT 1 FROM users WHERE username='vic'");
+  if (vicRows > 0) {
+    const hash = await bcrypt.hash('victoria2026', 12);
+    await db.query("UPDATE users SET username='victoria', password_hash=$1 WHERE username='vic'", [hash]);
+    console.log('✅ Migrated vic → victoria');
+  }
+
   console.log('✅ PostgreSQL connected');
 }
 
