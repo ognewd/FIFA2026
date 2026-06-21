@@ -709,6 +709,14 @@ const KO = {
 const KO_MAP = {};
 for(const rd of Object.values(KO)) rd.matches.forEach(m => KO_MAP[m.id]=m);
 
+// Known qualifiers: bracket slot → team name (update as teams qualify)
+const QUALIFIED = {
+  '1A': 'Mexico',
+  '1D': 'USA',
+  '1E': 'Germany',
+};
+function qs(slot){ return QUALIFIED[slot]||slot; }
+
 // ─────────────────────────────────────────
 //  STATE
 // ─────────────────────────────────────────
@@ -1133,9 +1141,10 @@ function renderBracket(){
     const matchHtml=rd.matches.map(m=>{
       const r=S.results[m.id];
       const rh=r?+r.h:null,ra=r?+r.a:null;
+      const th=qs(m.h), ta=qs(m.a);
       return`<div class="b-match" style="cursor:default;opacity:0.6">
-        <div class="b-team ${r&&rh>ra?'win':''}">${m.h}${r?`<span class="b-team-s">${r.h}</span>`:''}</div>
-        <div class="b-team ${r&&ra>rh?'win':''}">${m.a}${r?`<span class="b-team-s">${r.a}</span>`:''}</div>
+        <div class="b-team ${r&&rh>ra?'win':''}">${F[th]||''}${th}${r?`<span class="b-team-s">${r.h}</span>`:''}</div>
+        <div class="b-team ${r&&ra>rh?'win':''}">${F[ta]||''}${ta}${r?`<span class="b-team-s">${r.a}</span>`:''}</div>
       </div>`;
     }).join('');
     return`<div class="b-round">
