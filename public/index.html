@@ -172,32 +172,27 @@ input:focus{outline:none;border-color:var(--accent)}
 
 /* ── BRACKET TREE ── */
 .ko-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px}
-.ko-hdr-row{display:flex;padding-bottom:10px}
-.ko-hdr-cell{flex:0 0 150px;font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);text-align:center}
-.ko-hdr-final{flex:0 0 178px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);text-align:center}
-.ko-tree{display:flex;align-items:stretch;min-height:580px}
-.ko-half{display:flex;align-items:stretch}
-.ko-col{display:flex;flex-direction:column;flex:0 0 150px;position:relative}
+.ko-2row{display:flex;align-items:stretch}
+.ko-rows{flex:0 0 auto;display:flex;flex-direction:column;gap:16px}
+.ko-row-block{display:flex;flex-direction:column}
+.ko-row-hdr{display:flex;padding-bottom:6px}
+.ko-hdr-cell{flex:0 0 138px;font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);text-align:center}
+.ko-row{display:flex;align-items:stretch}
+.ko-col{display:flex;flex-direction:column;flex:0 0 138px;position:relative}
 .ko-pair{display:flex;flex-direction:column;flex:1;position:relative}
-.ko-left .ko-pair.ko-pair2::after,.ko-right .ko-pair.ko-pair2::after{
-  content:'';position:absolute;width:1px;background:var(--border);top:25%;bottom:25%}
-.ko-left .ko-pair.ko-pair2::after{right:0}
-.ko-right .ko-pair.ko-pair2::after{left:0}
-.ko-slot{flex:1;display:flex;align-items:center;position:relative;min-height:60px}
+.ko-pair.ko-pair2::after{content:'';position:absolute;right:0;width:1px;background:var(--border);top:25%;bottom:25%}
+.ko-slot{flex:1;display:flex;align-items:center;position:relative;min-height:54px}
 .ko-slot::before,.ko-slot::after{content:'';position:absolute;top:50%;height:1px;width:8px;background:var(--border)}
 .ko-slot::before{left:0}
 .ko-slot::after{right:0}
-.ko-left .ko-col:first-child .ko-slot::before,
-.ko-right .ko-col:last-child .ko-slot::after{display:none}
-.ko-left .ko-col:last-child .ko-slot::after,
-.ko-right .ko-col:first-child .ko-slot::before{display:none}
+.ko-col:first-child .ko-slot::before{display:none}
 .ko-match{background:var(--surface);border:1px solid var(--border);border-radius:7px;overflow:hidden;margin:0 8px;width:calc(100% - 16px)}
 .ko-team{padding:5px 7px;font-size:11px;font-weight:700;display:flex;align-items:center;white-space:nowrap;overflow:hidden}
 .ko-team:first-child{border-bottom:1px solid var(--border)}
 .ko-team.win{background:rgba(0,200,83,.1);color:var(--green)}
 .ko-score{margin-left:auto;font-weight:800;font-size:12px;color:var(--accent);padding-left:4px;flex-shrink:0}
 .ko-tbd{color:var(--dim);font-size:10px;font-weight:600}
-.ko-center{display:flex;flex-direction:column;justify-content:center;align-items:stretch;flex:0 0 178px;padding:0 6px}
+.ko-center{display:flex;flex-direction:column;justify-content:center;align-items:stretch;flex:0 0 180px;padding:0 6px}
 .ko-final-hdr{font-size:13px;font-weight:900;text-align:center;margin-bottom:8px;letter-spacing:.04em}
 .ko-final-meta{font-size:9px;color:var(--dim);text-align:center;margin-top:5px}
 .ko-tp-sep{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);text-align:center;margin:14px 0 5px}
@@ -1178,8 +1173,7 @@ function renderBracket(){
     const r=S.results[m.id];
     const rh=r?+r.h:null,ra=r?+r.a:null;
     const th=qs(m.h),ta=qs(m.a);
-    const cls=big?'ko-match ko-final-match':'ko-match';
-    return`<div class="${cls}">
+    return`<div class="${big?'ko-match ko-final-match':'ko-match'}">
       <div class="ko-team ${r&&rh>ra?'win':''}">
         ${QUALIFIED[m.h]?bf(th):''}<span${!QUALIFIED[m.h]?' class="ko-tbd"':''}>${th}</span>
         ${r?`<span class="ko-score">${rh}</span>`:''}
@@ -1194,30 +1188,31 @@ function renderBracket(){
   function col(matches){
     let h='';
     for(let i=0;i<matches.length;i+=2){
-      if(matches[i+1]){
-        h+=`<div class="ko-pair ko-pair2"><div class="ko-slot">${card(matches[i])}</div><div class="ko-slot">${card(matches[i+1])}</div></div>`;
-      } else {
-        h+=`<div class="ko-pair ko-pair1"><div class="ko-slot">${card(matches[i])}</div></div>`;
-      }
+      h+=matches[i+1]
+        ?`<div class="ko-pair ko-pair2"><div class="ko-slot">${card(matches[i])}</div><div class="ko-slot">${card(matches[i+1])}</div></div>`
+        :`<div class="ko-pair ko-pair1"><div class="ko-slot">${card(matches[i])}</div></div>`;
     }
     return`<div class="ko-col">${h}</div>`;
   }
 
+  const hdrs=`<div class="ko-row-hdr">
+    <div class="ko-hdr-cell">Round of 32</div>
+    <div class="ko-hdr-cell">Round of 16</div>
+    <div class="ko-hdr-cell">QF</div>
+    <div class="ko-hdr-cell">SF</div>
+  </div>`;
+
   document.getElementById('bracket-body').innerHTML=`<div class="ko-wrap">
-    <div class="ko-hdr-row">
-      <div class="ko-hdr-cell">Round of 32</div>
-      <div class="ko-hdr-cell">Round of 16</div>
-      <div class="ko-hdr-cell">Quarter-Finals</div>
-      <div class="ko-hdr-cell">Semi-Finals</div>
-      <div class="ko-hdr-final">🏆 Final</div>
-      <div class="ko-hdr-cell">Semi-Finals</div>
-      <div class="ko-hdr-cell">Quarter-Finals</div>
-      <div class="ko-hdr-cell">Round of 16</div>
-      <div class="ko-hdr-cell">Round of 32</div>
-    </div>
-    <div class="ko-tree">
-      <div class="ko-half ko-left">
-        ${col(r32.slice(0,8))}${col(r16.slice(0,4))}${col(qf.slice(0,2))}${col(sf.slice(0,1))}
+    <div class="ko-2row">
+      <div class="ko-rows">
+        <div class="ko-row-block">
+          ${hdrs}
+          <div class="ko-row">${col(r32.slice(0,8))}${col(r16.slice(0,4))}${col(qf.slice(0,2))}${col(sf.slice(0,1))}</div>
+        </div>
+        <div class="ko-row-block">
+          ${hdrs}
+          <div class="ko-row">${col(r32.slice(8,16))}${col(r16.slice(4,8))}${col(qf.slice(2,4))}${col(sf.slice(1,2))}</div>
+        </div>
       </div>
       <div class="ko-center">
         <div class="ko-final-hdr">🏆 Final</div>
@@ -1226,9 +1221,6 @@ function renderBracket(){
         <div class="ko-tp-sep">3rd Place</div>
         ${card(tp,false)}
         <div class="ko-final-meta">${tp.d} &bull; ${tp.v}</div>
-      </div>
-      <div class="ko-half ko-right">
-        ${col(sf.slice(1,2))}${col(qf.slice(2,4))}${col(r16.slice(4,8))}${col(r32.slice(8,16))}
       </div>
     </div>
   </div>`;
