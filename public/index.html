@@ -723,6 +723,20 @@ const QUALIFIED = {
 };
 function qs(slot){ return QUALIFIED[slot]||slot; }
 
+const TEAM_CC = {
+  'Mexico':'mx','South Africa':'za','Switzerland':'ch','Canada':'ca',
+  'Brazil':'br','Morocco':'ma','USA':'us','Germany':'de','Argentina':'ar',
+  'South Korea':'kr','Czech Republic':'cz','Bosnia & Herz.':'ba','Qatar':'qa',
+  'Haiti':'ht','Scotland':'gb-sct','Paraguay':'py','Australia':'au','Turkey':'tr',
+  'France':'fr','Senegal':'sn','Iraq':'iq','Norway':'no',
+  'Algeria':'dz','Austria':'at','Jordan':'jo',
+  'Portugal':'pt','DR Congo':'cd','Uzbekistan':'uz','Colombia':'co',
+};
+function bf(team){
+  const cc=TEAM_CC[team];
+  return cc?`<img src="https://flagcdn.com/20x15/${cc}.png" style="height:.85em;vertical-align:-.05em;margin-right:3px" loading="lazy">`:'';
+}
+
 // ─────────────────────────────────────────
 //  STATE
 // ─────────────────────────────────────────
@@ -1147,8 +1161,8 @@ function renderBracket(){
       const rh=r?+r.h:null,ra=r?+r.a:null;
       const th=qs(m.h), ta=qs(m.a);
       return`<div class="b-match" style="cursor:default;opacity:0.6">
-        <div class="b-team ${r&&rh>ra?'win':''}">${F[th]||''}${th}${r?`<span class="b-team-s">${r.h}</span>`:''}</div>
-        <div class="b-team ${r&&ra>rh?'win':''}">${F[ta]||''}${ta}${r?`<span class="b-team-s">${r.a}</span>`:''}</div>
+        <div class="b-team ${r&&rh>ra?'win':''}">${bf(th)}${th}${r?`<span class="b-team-s">${r.h}</span>`:''}</div>
+        <div class="b-team ${r&&ra>rh?'win':''}">${bf(ta)}${ta}${r?`<span class="b-team-s">${r.a}</span>`:''}</div>
       </div>`;
     }).join('');
     return`<div class="b-round">
