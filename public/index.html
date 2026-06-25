@@ -170,21 +170,38 @@ input:focus{outline:none;border-color:var(--accent)}
 .pred-val{font-weight:800}
 .pred-pts{color:var(--green);font-weight:800}
 
-/* ── BRACKET ── */
-.bracket-wrap{overflow-x:auto;padding-bottom:16px}
-.bracket{display:flex;gap:8px;align-items:flex-start;min-width:860px;padding:4px 0}
-.b-round{flex:1;min-width:0}
-.b-round-ttl{text-align:center;font-size:10px;font-weight:800;text-transform:uppercase;
-  color:var(--dim);margin-bottom:10px;letter-spacing:.06em}
-.b-matches{display:flex;flex-direction:column;gap:6px;align-items:stretch}
-.b-match{background:var(--surface);border:1px solid var(--border);border-radius:7px;
-  overflow:hidden;cursor:pointer;transition:.15s}
-.b-match:hover{border-color:var(--accent)}
-.b-team{padding:7px 9px;font-size:11px;font-weight:700;display:flex;
-  justify-content:space-between;align-items:center}
-.b-team:first-child{border-bottom:1px solid var(--border)}
-.b-team.win{background:rgba(0,200,83,.1);color:var(--green)}
-.b-team-s{font-weight:800;font-size:12px;color:var(--accent)}
+/* ── BRACKET TREE ── */
+.ko-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px}
+.ko-hdr-row{display:flex;padding-bottom:10px}
+.ko-hdr-cell{flex:0 0 150px;font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);text-align:center}
+.ko-hdr-final{flex:0 0 178px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);text-align:center}
+.ko-tree{display:flex;align-items:stretch;min-height:580px}
+.ko-half{display:flex;align-items:stretch}
+.ko-col{display:flex;flex-direction:column;flex:0 0 150px;position:relative}
+.ko-pair{display:flex;flex-direction:column;flex:1;position:relative}
+.ko-left .ko-pair.ko-pair2::after,.ko-right .ko-pair.ko-pair2::after{
+  content:'';position:absolute;width:1px;background:var(--border);top:25%;bottom:25%}
+.ko-left .ko-pair.ko-pair2::after{right:0}
+.ko-right .ko-pair.ko-pair2::after{left:0}
+.ko-slot{flex:1;display:flex;align-items:center;position:relative;min-height:60px}
+.ko-slot::before,.ko-slot::after{content:'';position:absolute;top:50%;height:1px;width:8px;background:var(--border)}
+.ko-slot::before{left:0}
+.ko-slot::after{right:0}
+.ko-left .ko-col:first-child .ko-slot::before,
+.ko-right .ko-col:last-child .ko-slot::after{display:none}
+.ko-left .ko-col:last-child .ko-slot::after,
+.ko-right .ko-col:first-child .ko-slot::before{display:none}
+.ko-match{background:var(--surface);border:1px solid var(--border);border-radius:7px;overflow:hidden;margin:0 8px;width:calc(100% - 16px)}
+.ko-team{padding:5px 7px;font-size:11px;font-weight:700;display:flex;align-items:center;white-space:nowrap;overflow:hidden}
+.ko-team:first-child{border-bottom:1px solid var(--border)}
+.ko-team.win{background:rgba(0,200,83,.1);color:var(--green)}
+.ko-score{margin-left:auto;font-weight:800;font-size:12px;color:var(--accent);padding-left:4px;flex-shrink:0}
+.ko-tbd{color:var(--dim);font-size:10px;font-weight:600}
+.ko-center{display:flex;flex-direction:column;justify-content:center;align-items:stretch;flex:0 0 178px;padding:0 6px}
+.ko-final-hdr{font-size:13px;font-weight:900;text-align:center;margin-bottom:8px;letter-spacing:.04em}
+.ko-final-meta{font-size:9px;color:var(--dim);text-align:center;margin-top:5px}
+.ko-tp-sep{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);text-align:center;margin:14px 0 5px}
+.ko-final-match .ko-team{padding:7px 9px;font-size:12px}
 
 /* ── LEADERBOARD ── */
 .lb-wrap{max-width:720px;margin:0 auto}
@@ -440,7 +457,7 @@ input:focus{outline:none;border-color:var(--accent)}
     <div class="page" id="pg-bracket">
       <div class="page-hdr">
         <div class="page-title">Knockout <span>Bracket</span></div>
-        <div class="page-hint">Round of 32 → Final &bull; Click to predict</div>
+        <div class="page-hint">Round of 32 · July 5–19 &bull; Predictions open after group stage</div>
       </div>
       <div id="bracket-body"></div>
     </div>
@@ -1154,30 +1171,67 @@ function renderMItem(m,g){
 //  RENDER: BRACKET
 // ─────────────────────────────────────────
 function renderBracket(){
-  const rounds=Object.values(KO);
-  const colHtml=rounds.map(rd=>{
-    const matchHtml=rd.matches.map(m=>{
-      const r=S.results[m.id];
-      const rh=r?+r.h:null,ra=r?+r.a:null;
-      const th=qs(m.h), ta=qs(m.a);
-      return`<div class="b-match" style="cursor:default;opacity:0.6">
-        <div class="b-team ${r&&rh>ra?'win':''}">${bf(th)}${th}${r?`<span class="b-team-s">${r.h}</span>`:''}</div>
-        <div class="b-team ${r&&ra>rh?'win':''}">${bf(ta)}${ta}${r?`<span class="b-team-s">${r.a}</span>`:''}</div>
-      </div>`;
-    }).join('');
-    return`<div class="b-round">
-      <div class="b-round-ttl">${rd.title}</div>
-      <div class="b-matches">${matchHtml}</div>
-    </div>`;
-  }).join('');
+  const r32=KO.r32.matches,r16=KO.r16.matches,qf=KO.qf.matches,sf=KO.sf.matches;
+  const fin=KO.fin.matches[0],tp=KO.tp.matches[0];
 
-  document.getElementById('bracket-body').innerHTML=`
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px">
-      <div style="font-size:12px;color:var(--dim);margin-bottom:14px">
-        Bracket populates as group stage results are entered. You can predict any match in advance.
+  function card(m,big){
+    const r=S.results[m.id];
+    const rh=r?+r.h:null,ra=r?+r.a:null;
+    const th=qs(m.h),ta=qs(m.a);
+    const cls=big?'ko-match ko-final-match':'ko-match';
+    return`<div class="${cls}">
+      <div class="ko-team ${r&&rh>ra?'win':''}">
+        ${QUALIFIED[m.h]?bf(th):''}<span${!QUALIFIED[m.h]?' class="ko-tbd"':''}>${th}</span>
+        ${r?`<span class="ko-score">${rh}</span>`:''}
       </div>
-      <div class="bracket-wrap"><div class="bracket">${colHtml}</div></div>
+      <div class="ko-team ${r&&ra>rh?'win':''}">
+        ${QUALIFIED[m.a]?bf(ta):''}<span${!QUALIFIED[m.a]?' class="ko-tbd"':''}>${ta}</span>
+        ${r?`<span class="ko-score">${ra}</span>`:''}
+      </div>
     </div>`;
+  }
+
+  function col(matches){
+    let h='';
+    for(let i=0;i<matches.length;i+=2){
+      if(matches[i+1]){
+        h+=`<div class="ko-pair ko-pair2"><div class="ko-slot">${card(matches[i])}</div><div class="ko-slot">${card(matches[i+1])}</div></div>`;
+      } else {
+        h+=`<div class="ko-pair ko-pair1"><div class="ko-slot">${card(matches[i])}</div></div>`;
+      }
+    }
+    return`<div class="ko-col">${h}</div>`;
+  }
+
+  document.getElementById('bracket-body').innerHTML=`<div class="ko-wrap">
+    <div class="ko-hdr-row">
+      <div class="ko-hdr-cell">Round of 32</div>
+      <div class="ko-hdr-cell">Round of 16</div>
+      <div class="ko-hdr-cell">Quarter-Finals</div>
+      <div class="ko-hdr-cell">Semi-Finals</div>
+      <div class="ko-hdr-final">🏆 Final</div>
+      <div class="ko-hdr-cell">Semi-Finals</div>
+      <div class="ko-hdr-cell">Quarter-Finals</div>
+      <div class="ko-hdr-cell">Round of 16</div>
+      <div class="ko-hdr-cell">Round of 32</div>
+    </div>
+    <div class="ko-tree">
+      <div class="ko-half ko-left">
+        ${col(r32.slice(0,8))}${col(r16.slice(0,4))}${col(qf.slice(0,2))}${col(sf.slice(0,1))}
+      </div>
+      <div class="ko-center">
+        <div class="ko-final-hdr">🏆 Final</div>
+        ${card(fin,true)}
+        <div class="ko-final-meta">${fin.d} &bull; ${fin.v}</div>
+        <div class="ko-tp-sep">3rd Place</div>
+        ${card(tp,false)}
+        <div class="ko-final-meta">${tp.d} &bull; ${tp.v}</div>
+      </div>
+      <div class="ko-half ko-right">
+        ${col(sf.slice(1,2))}${col(qf.slice(2,4))}${col(r16.slice(4,8))}${col(r32.slice(8,16))}
+      </div>
+    </div>
+  </div>`;
 }
 
 // ─────────────────────────────────────────
