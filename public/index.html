@@ -712,8 +712,14 @@ for(const rd of Object.values(KO)) rd.matches.forEach(m => KO_MAP[m.id]=m);
 // Known qualifiers: bracket slot → team name (update as teams qualify)
 const QUALIFIED = {
   '1A': 'Mexico',
+  '2A': 'South Africa',
+  '1B': 'Switzerland',
+  '2B': 'Canada',
+  '1C': 'Brazil',
+  '2C': 'Morocco',
   '1D': 'USA',
   '1E': 'Germany',
+  '1J': 'Argentina',
 };
 function qs(slot){ return QUALIFIED[slot]||slot; }
 
