@@ -896,7 +896,7 @@ function fmtDate(d){
   return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
 }
 
-const todayStr=new Date().toISOString().slice(0,10);
+const todayStr=new Date(Date.now()+2*3600*1000).toISOString().slice(0,10);
 
 function getStatus(m){
   if(S.results[m.id])return{cls:'s-ft',txt:'FT'};
@@ -918,16 +918,14 @@ function next3Days(){
 }
 
 function matchStarted(m){
-  if(m.d<todayStr)return true;
-  if(m.d>todayStr)return false;
-  // Today — check CET kickoff time (CEST = UTC+2 in summer)
+  const cetNow=new Date(Date.now()+2*3600*1000);
+  const cetDate=cetNow.toISOString().slice(0,10);
+  if(m.d<cetDate)return true;
+  if(m.d>cetDate)return false;
   if(!m.t)return true;
   const[h,min]=m.t.split(':').map(Number);
-  const nowCETMin=(new Date().getTime()/60000)%(24*60)+120; // UTC minutes + 2h offset
-  const nowUTC=new Date();
-  const nowCETHour=nowUTC.getUTCHours()+2;
-  const nowCETMinute=nowUTC.getUTCMinutes();
-  return nowCETHour*60+nowCETMinute>=h*60+min;
+  const nowCETMin=cetNow.getUTCHours()*60+cetNow.getUTCMinutes();
+  return nowCETMin>=h*60+min;
 }
 
 function renderDash(){
