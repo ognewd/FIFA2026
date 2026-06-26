@@ -490,7 +490,7 @@ input:focus{outline:none;border-color:var(--accent)}
     <div class="page" id="pg-bracket">
       <div class="page-hdr">
         <div class="page-title">Knockout <span>Bracket</span></div>
-        <div class="page-hint">Round of 32 · July 5–19 &bull; Predictions open after group stage</div>
+        <div class="page-hint">Round of 32 · Jun 28 – Jul 19</div>
       </div>
       <div id="bracket-body"></div>
     </div>
@@ -709,49 +709,51 @@ const WC = {
 };
 
 const KO = {
+  // Left half: M74→M77→M89, M73→M75→M90, M83→M84→M93, M81→M82→M94 → M97→M98→M101
+  // Right half: M76→M78→M91, M79→M80→M92, M86→M88→M95, M85→M87→M96 → M99→M100→M102
   r32:{title:'Round of 32',matches:[
-    {id:'R32_1', h:'1A',a:'3C/D/E',d:'2026-07-05',v:'TBD'},
-    {id:'R32_2', h:'1B',a:'3A/D/F',d:'2026-07-05',v:'TBD'},
-    {id:'R32_3', h:'1C',a:'3A/B/F',d:'2026-07-06',v:'TBD'},
-    {id:'R32_4', h:'2A',a:'2B',    d:'2026-07-06',v:'TBD'},
-    {id:'R32_5', h:'1D',a:'3B/C/E',d:'2026-07-06',v:'TBD'},
-    {id:'R32_6', h:'2C',a:'2D',    d:'2026-07-07',v:'TBD'},
-    {id:'R32_7', h:'1E',a:'3G/H/I',d:'2026-07-07',v:'TBD'},
-    {id:'R32_8', h:'1F',a:'3J/K/L',d:'2026-07-07',v:'TBD'},
-    {id:'R32_9', h:'1G',a:'2H',    d:'2026-07-08',v:'TBD'},
-    {id:'R32_10',h:'1H',a:'2G',    d:'2026-07-08',v:'TBD'},
-    {id:'R32_11',h:'1I',a:'2J',    d:'2026-07-08',v:'TBD'},
-    {id:'R32_12',h:'2E',a:'2F',    d:'2026-07-09',v:'TBD'},
-    {id:'R32_13',h:'1J',a:'2I',    d:'2026-07-09',v:'TBD'},
-    {id:'R32_14',h:'1K',a:'2L',    d:'2026-07-09',v:'TBD'},
-    {id:'R32_15',h:'1L',a:'2K',    d:'2026-07-10',v:'TBD'},
-    {id:'R32_16',h:'2J',a:'2K',    d:'2026-07-10',v:'TBD'}
+    {id:'M74',h:'Germany',       a:'3ABCDF',        d:'2026-06-29',v:'TBD'},
+    {id:'M77',h:'1I',            a:'3CDFGH',        d:'2026-06-30',v:'TBD'},
+    {id:'M73',h:'South Africa',  a:'Canada',        d:'2026-06-28',v:'TBD'},
+    {id:'M75',h:'Netherlands',   a:'Morocco',       d:'2026-06-30',v:'TBD'},
+    {id:'M83',h:'2K',            a:'2L',            d:'2026-07-03',v:'TBD'},
+    {id:'M84',h:'1H',            a:'2J',            d:'2026-07-02',v:'TBD'},
+    {id:'M81',h:'USA',           a:'Bosnia & Herz.',d:'2026-07-02',v:'TBD'},
+    {id:'M82',h:'1G',            a:'3AEHIJ',        d:'2026-07-01',v:'TBD'},
+    {id:'M76',h:'Brazil',        a:'Japan',         d:'2026-06-29',v:'TBD'},
+    {id:'M78',h:'Ivory Coast',   a:'2I',            d:'2026-06-30',v:'TBD'},
+    {id:'M79',h:'Mexico',        a:'3CEFHI',        d:'2026-07-01',v:'TBD'},
+    {id:'M80',h:'1L',            a:'3EHIJK',        d:'2026-07-01',v:'TBD'},
+    {id:'M86',h:'Argentina',     a:'2H',            d:'2026-07-04',v:'TBD'},
+    {id:'M88',h:'Australia',     a:'2G',            d:'2026-07-03',v:'TBD'},
+    {id:'M85',h:'Switzerland',   a:'3EFGIJ',        d:'2026-07-03',v:'TBD'},
+    {id:'M87',h:'1K',            a:'3DEIJL',        d:'2026-07-04',v:'TBD'}
   ]},
   r16:{title:'Round of 16',matches:[
-    {id:'R16_1',h:'W R32-1',a:'W R32-2',d:'2026-07-11',v:'TBD'},
-    {id:'R16_2',h:'W R32-3',a:'W R32-4',d:'2026-07-11',v:'TBD'},
-    {id:'R16_3',h:'W R32-5',a:'W R32-6',d:'2026-07-12',v:'TBD'},
-    {id:'R16_4',h:'W R32-7',a:'W R32-8',d:'2026-07-12',v:'TBD'},
-    {id:'R16_5',h:'W R32-9',a:'W R32-10',d:'2026-07-13',v:'TBD'},
-    {id:'R16_6',h:'W R32-11',a:'W R32-12',d:'2026-07-13',v:'TBD'},
-    {id:'R16_7',h:'W R32-13',a:'W R32-14',d:'2026-07-14',v:'TBD'},
-    {id:'R16_8',h:'W R32-15',a:'W R32-16',d:'2026-07-14',v:'TBD'}
+    {id:'M89',h:'W M74',a:'W M77',d:'2026-07-04',v:'TBD'},
+    {id:'M90',h:'W M73',a:'W M75',d:'2026-07-04',v:'TBD'},
+    {id:'M93',h:'W M83',a:'W M84',d:'2026-07-06',v:'TBD'},
+    {id:'M94',h:'W M81',a:'W M82',d:'2026-07-07',v:'TBD'},
+    {id:'M91',h:'W M76',a:'W M78',d:'2026-07-05',v:'TBD'},
+    {id:'M92',h:'W M79',a:'W M80',d:'2026-07-06',v:'TBD'},
+    {id:'M95',h:'W M86',a:'W M88',d:'2026-07-07',v:'TBD'},
+    {id:'M96',h:'W M85',a:'W M87',d:'2026-07-07',v:'TBD'}
   ]},
   qf:{title:'Quarter-Finals',matches:[
-    {id:'QF_1',h:'W R16-1',a:'W R16-2',d:'2026-07-17',v:'TBD'},
-    {id:'QF_2',h:'W R16-3',a:'W R16-4',d:'2026-07-17',v:'TBD'},
-    {id:'QF_3',h:'W R16-5',a:'W R16-6',d:'2026-07-18',v:'TBD'},
-    {id:'QF_4',h:'W R16-7',a:'W R16-8',d:'2026-07-18',v:'TBD'}
+    {id:'M97', h:'W M89',a:'W M90',d:'2026-07-09',v:'TBD'},
+    {id:'M98', h:'W M93',a:'W M94',d:'2026-07-10',v:'TBD'},
+    {id:'M99', h:'W M91',a:'W M92',d:'2026-07-11',v:'TBD'},
+    {id:'M100',h:'W M95',a:'W M96',d:'2026-07-12',v:'TBD'}
   ]},
   sf:{title:'Semi-Finals',matches:[
-    {id:'SF_1',h:'W QF-1',a:'W QF-2',d:'2026-07-21',v:'TBD'},
-    {id:'SF_2',h:'W QF-3',a:'W QF-4',d:'2026-07-21',v:'TBD'}
+    {id:'M101',h:'W M97', a:'W M98', d:'2026-07-14',v:'TBD'},
+    {id:'M102',h:'W M99', a:'W M100',d:'2026-07-15',v:'TBD'}
   ]},
   tp:{title:'3rd Place',matches:[
-    {id:'TP',h:'L SF-1',a:'L SF-2',d:'2026-07-25',v:'Miami'}
+    {id:'M103',h:'L M101',a:'L M102',d:'2026-07-18',v:'TBD'}
   ]},
   fin:{title:'🏆 Final',matches:[
-    {id:'FIN',h:'W SF-1',a:'W SF-2',d:'2026-07-26',v:'MetLife Stadium, NJ'}
+    {id:'M104',h:'W M101',a:'W M102',d:'2026-07-19',v:'TBD'}
   ]}
 };
 
@@ -759,25 +761,22 @@ const KO = {
 const KO_MAP = {};
 for(const rd of Object.values(KO)) rd.matches.forEach(m => KO_MAP[m.id]=m);
 
-// Known qualifiers: bracket slot → team name (update as teams qualify)
+// Known team names used directly as h/a in KO matches (show flag, no TBD style)
 const QUALIFIED = {
-  '1A': 'Mexico',
-  '2A': 'South Africa',
-  '1B': 'Switzerland',
-  '2B': 'Canada',
-  '1C': 'Brazil',
-  '2C': 'Morocco',
-  '1D': 'USA',
-  '1E': 'Germany',
-  '1J': 'Argentina',
+  'Germany':'Germany','Netherlands':'Netherlands','Morocco':'Morocco',
+  'Brazil':'Brazil','Japan':'Japan','South Africa':'South Africa',
+  'Canada':'Canada','Ivory Coast':'Ivory Coast','Mexico':'Mexico',
+  'USA':'USA','Bosnia & Herz.':'Bosnia & Herz.','Switzerland':'Switzerland',
+  'Argentina':'Argentina','Australia':'Australia',
 };
 function qs(slot){ return QUALIFIED[slot]||slot; }
 
 const TEAM_CC = {
   'Mexico':'mx','South Africa':'za','Switzerland':'ch','Canada':'ca',
   'Brazil':'br','Morocco':'ma','USA':'us','Germany':'de','Argentina':'ar',
-  'South Korea':'kr','Czech Republic':'cz','Bosnia & Herz.':'ba','Qatar':'qa',
-  'Haiti':'ht','Scotland':'gb-sct','Paraguay':'py','Australia':'au','Turkey':'tr',
+  'Netherlands':'nl','Japan':'jp','Ivory Coast':'ci','Australia':'au',
+  'Bosnia & Herz.':'ba','South Korea':'kr','Czech Republic':'cz','Qatar':'qa',
+  'Haiti':'ht','Scotland':'gb-sct','Paraguay':'py','Turkey':'tr',
   'France':'fr','Senegal':'sn','Iraq':'iq','Norway':'no',
   'Algeria':'dz','Austria':'at','Jordan':'jo',
   'Portugal':'pt','DR Congo':'cd','Uzbekistan':'uz','Colombia':'co',
