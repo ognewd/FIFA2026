@@ -142,6 +142,9 @@ input:focus{outline:none;border-color:var(--accent)}
   color:var(--dim);cursor:pointer;font-size:13px;font-weight:700;transition:.15s}
 .ftab:hover,.ftab.active{background:var(--accent);color:var(--btn-txt);border-color:var(--accent)}
 .groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+.g-matches-hdr{font-size:11px;font-weight:800;text-transform:uppercase;color:var(--dim);
+  letter-spacing:.06em;margin:24px 0 10px}
+.matches-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .g-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .g-hdr{padding:12px 14px;background:var(--surface2);border-bottom:1px solid var(--border);
   font-weight:800;font-size:14px;color:var(--accent);display:flex;justify-content:space-between;align-items:center}
@@ -309,33 +312,118 @@ input:focus{outline:none;border-color:var(--accent)}
 .mo-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;
   align-items:center;justify-content:center}
 .mo-ov.open{display:flex}
-.mo{background:var(--surface);border:1px solid var(--border);border-radius:14px;
-  padding:26px;width:440px;max-width:95vw}
-.mo-title{font-size:17px;font-weight:800;margin-bottom:4px}
-.mo-sub{font-size:12px;color:var(--dim);margin-bottom:20px}
-.mo-vs{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-.mo-tm{flex:1;font-size:15px;font-weight:800;text-align:center}
-.mo-sep{color:var(--dim);font-size:13px}
+.mo{background:#fff;border-radius:16px;padding:32px;width:480px;max-width:95vw;
+  box-shadow:0 8px 32px rgba(0,0,0,.12);color:#111;max-height:90vh;overflow-y:auto}
+.mo-title{display:none}
+/* Dark match header */
+.mo-dark-hdr{background:#1A1A2E;border-radius:16px 16px 0 0;
+  margin:-32px -32px 24px -32px;padding:20px 32px 24px}
+.mo-dh-date{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);text-align:center;margin-bottom:14px}
+.mo-dh-body{display:flex;align-items:center;gap:8px}
+.mo-tm{flex:1;font-size:18px;font-weight:700;color:#111;display:flex;align-items:center;gap:6px}
+.mo-tm-away{justify-content:flex-end;text-align:right}
+.mo-dark-hdr .mo-tm{color:#fff;font-size:16px}
+.mo-dh-score{display:flex;align-items:center;gap:8px;flex-shrink:0;padding:0 4px}
+.mo-dh-num{font-size:48px;font-weight:700;color:#fff;line-height:1;min-width:30px;text-align:center}
+.mo-dh-num.empty{color:rgba(255,255,255,.25);font-size:36px}
+.mo-dh-dash{font-size:24px;color:rgba(255,255,255,.3);font-weight:300}
+.mo-dh-pen{font-size:11px;color:rgba(255,255,255,.4);text-align:center;margin-top:10px}
+/* Prediction rows (inside modal) */
+.mo-pred-list{display:flex;flex-direction:column}
+.mo-pred-row2{display:flex;align-items:center;gap:12px;min-height:52px;padding:6px 0;
+  border-bottom:1px solid #F0F0F0}
+.mo-pred-row2:last-child{border-bottom:none}
+.mo-pred-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:16px;flex-shrink:0}
+.mo-pred-name{font-size:14px;font-weight:500;color:#1A1A2E;flex:1;min-width:50px;
+  display:flex;align-items:center;gap:4px}
+.mo-pred-you{font-size:10px;color:#aaa;font-weight:400;line-height:1}
+.mo-pred-chip{display:flex;flex-direction:column;align-items:center;
+  padding:4px 10px;border-radius:20px;border:1px solid transparent;gap:1px;flex-shrink:0}
+.mo-pred-chip-val{font-size:12px;font-weight:700;line-height:1.2;white-space:nowrap}
+.mo-pred-chip-lbl{font-size:9px;opacity:.6;line-height:1;text-transform:uppercase;letter-spacing:.04em}
+.chip-exact{background:#E8F4FF;border-color:#B3D9FF;color:#1565C0}
+.chip-winner{background:#FFF3E0;border-color:#FFD699;color:#E65100}
+.chip-pen{background:#F3E8FF;border-color:#D4AAFF;color:#6A1B9A}
+.chip-none{color:#ccc}
+.mo-pred-pts{font-size:16px;font-weight:700;flex-shrink:0;min-width:38px;text-align:right}
+.mo-pred-pts.pos{color:#16a34a}
+.mo-pred-pts.neg{color:#dc2626}
+.mo-pred-pts.unk{color:#ccc;font-size:14px;font-weight:400}
+/* divider used in res-block only */
+.mo-divider{height:1px;background:#F0F0F0;margin:20px 0}
+/* override chip rows when inside a themed card (not modal) */
+.m-item .mo-pred-row2{border-bottom-color:var(--border)}
+.m-item .mo-pred-name{color:var(--text)}
+.m-item .mo-pred-pts.unk{color:var(--dim)}
+/* Score inputs */
+.ko-score-wrap,.grp-score-wrap{display:flex;align-items:center;gap:16px;
+  justify-content:center;margin:12px 0 8px}
+.ko-score-col,.grp-score-col{display:flex;flex-direction:column;align-items:center;gap:6px}
+.si{width:80px;height:80px;text-align:center;font-size:32px;font-weight:700;
+  background:#fff;border:2px solid #E0E0E0;border-radius:12px;color:#111}
+.si:focus{border-color:#1A1AFF;outline:none}
+.si-dash{color:#888;font-size:24px;font-weight:400}
+.si-team-lbl{font-size:11px;color:#888;text-align:center;max-width:80px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Legacy: result admin rows */
 .si-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
-.si-lbl{font-size:12px;color:var(--dim);width:90px;flex-shrink:0}
+.si-lbl{font-size:12px;color:#888;width:90px;flex-shrink:0}
 .si-wrap{display:flex;gap:7px;align-items:center;flex:1}
-.si{width:54px;height:42px;text-align:center;font-size:19px;font-weight:800;
-  background:var(--bg);border:2px solid var(--border);border-radius:8px;color:var(--text)}
-.si:focus{border-color:var(--accent)}
-.si-dash{color:var(--dim);font-size:16px}
-.mo-actions{display:flex;gap:10px;margin-top:18px}
-.btn-sec{flex:1;padding:11px;background:var(--surface2);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);cursor:pointer;font-size:14px;font-weight:700;transition:.15s}
-.btn-sec:hover{border-color:var(--accent)}
-.mo-actions .btn-primary{flex:1;width:auto}
-.mo-preds{margin-top:10px;display:flex;flex-direction:column;gap:7px}
-.mo-pred-row{background:var(--surface2);border-radius:7px;padding:9px 12px;font-size:12px;
-  display:flex;justify-content:space-between;align-items:center}
+/* KO type buttons */
+.ko-type-row{display:flex;gap:8px;margin-bottom:8px}
+.ko-type-btn{flex:1;height:64px;border-radius:12px;cursor:pointer;border:none;
+  background:#F5F5F7;color:#111;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;transition:.15s;padding:0 6px}
+.ko-type-btn.active{background:#1A1AFF;color:#fff}
+.ko-type-btn:disabled{opacity:.4;cursor:default}
+.ktb-label{font-size:14px;font-weight:600;line-height:1}
+.ktb-pts{font-size:12px;opacity:.7;line-height:1}
+/* Risk warning */
+.ko-risk-warning{font-size:12px;color:#FF4444;min-height:16px;margin-bottom:12px;text-align:center}
+/* Winner / Penalties selector */
+.ko-win-row{display:flex;gap:8px;margin-bottom:8px;margin-top:4px}
+.ko-win-btn{flex:1;height:80px;border-radius:12px;cursor:pointer;border:none;
+  background:#F5F5F7;color:#111;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;transition:.15s;
+  position:relative;padding:8px}
+.ko-win-btn.active{background:#1A1AFF;color:#fff}
+.ko-win-btn:disabled{opacity:.4;cursor:default}
+.ko-win-flag{font-size:24px;line-height:1}
+.ko-win-name{font-size:14px;font-weight:700;line-height:1}
+.ko-win-check{position:absolute;top:6px;right:8px;font-size:12px;font-weight:800;
+  opacity:0;transition:.1s}
+.ko-win-btn.active .ko-win-check{opacity:1}
+/* Predictions display */
+.mo-preds{margin-top:16px;display:flex;flex-direction:column;gap:7px}
+.mo-pred-row{background:#F5F5F7;border-radius:8px;padding:10px 14px;font-size:12px;
+  display:flex;justify-content:space-between;align-items:center;color:#111}
 .mo-res-row{background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.25);
-  border-radius:7px;padding:9px 12px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+  border-radius:8px;padding:10px 14px;font-size:12px;
+  display:flex;justify-content:space-between;align-items:center}
 .chk-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;
-  color:var(--dim);cursor:pointer}
+  color:#888;cursor:pointer}
 .chk-row input{width:auto;margin:0}
+/* Modal actions */
+.mo-actions{display:flex;flex-direction:column;gap:8px;margin-top:24px}
+.mo-save-btn{width:100%;height:52px;border-radius:12px;background:#1A1AFF;
+  color:#fff;border:none;font-size:16px;font-weight:600;cursor:pointer;transition:.15s}
+.mo-save-btn:hover{opacity:.9}
+.mo-save-btn:disabled{opacity:.4;cursor:default}
+.mo-cancel-btn{width:100%;height:36px;background:none;border:none;color:#888;
+  font-size:14px;cursor:pointer;font-weight:500}
+.mo-cancel-btn:hover{color:#555}
+.ko-match-list{margin-top:28px;display:flex;flex-direction:column;gap:16px}
+/* KO bracket card prediction mini */
+.ko-pred-mini{font-size:10px;color:var(--dim);margin-top:4px;padding:2px 4px;
+  border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.ko-pred-mini .kp-val{font-weight:700;color:var(--text)}
+.ko-pred-mini .kp-pts{font-size:10px;font-weight:800}
+.ko-pts-8{color:#ffd700}.ko-pts-6{color:#4caf50}.ko-pts-4{color:#81c784}
+.ko-pts-3{color:var(--green)}.ko-pts-neg{color:var(--red)}
+.ko-match{cursor:pointer}
+.ko-match:hover{opacity:.85}
 /* Toast */
 .toast{position:fixed;bottom:22px;right:22px;background:var(--surface);border:1px solid var(--border);
   border-radius:9px;padding:11px 18px;font-size:13px;font-weight:700;z-index:300;
@@ -427,12 +515,7 @@ input:focus{outline:none;border-color:var(--accent)}
     <!-- DASHBOARD -->
     <div class="page active" id="pg-dash">
       <div class="page-hdr">
-        <div class="page-title">⚽ World Cup <span>2026</span></div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <div class="page-hint">June 11 – July 19 &bull; USA, Canada, Mexico</div>
-          <span id="sync-lbl" style="font-size:11px;color:var(--dim)"></span>
-          <button id="sync-btn" onclick="triggerSync()" style="padding:5px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--dim);cursor:pointer;font-size:12px;font-weight:700;transition:.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">🔄 Sync</button>
-        </div>
+        <div class="page-hint">June 11 – July 19 &bull; USA, Canada, Mexico</div>
       </div>
       <!-- top row: standings + rules -->
       <div class="dash-grid">
@@ -469,11 +552,9 @@ input:focus{outline:none;border-color:var(--accent)}
         <h3>Your Picks — Next 3 Days 🎯</h3>
         <div id="d-predict"></div>
       </div>
-      <!-- full-width: recent results -->
-      <div class="dash-card">
-        <h3>Latest Scores ⚽</h3>
-        <div id="d-recent"></div>
-      </div>
+      <!-- play off r32 -->
+      <div class="g-matches-hdr">Play Off — Round of 32</div>
+      <div class="matches-grid" id="d-r32"></div>
     </div>
 
     <!-- GROUPS -->
@@ -484,6 +565,8 @@ input:focus{outline:none;border-color:var(--accent)}
       </div>
       <div class="filter-bar" id="g-filters"></div>
       <div class="groups-grid" id="g-grid"></div>
+      <div class="g-matches-hdr" id="g-matches-hdr" style="display:none">Matches</div>
+      <div class="matches-grid" id="g-matches"></div>
     </div>
 
     <!-- BRACKET -->
@@ -527,24 +610,102 @@ input:focus{outline:none;border-color:var(--accent)}
 <!-- ===== MODAL ===== -->
 <div class="mo-ov" id="modal" onclick="if(event.target===this)closeMo()">
   <div class="mo">
-    <div class="mo-title" id="mo-title"></div>
-    <div class="mo-sub" id="mo-sub"></div>
-    <div class="mo-vs">
-      <div class="mo-tm" id="mo-home"></div>
-      <div class="mo-sep">vs</div>
-      <div class="mo-tm" id="mo-away"></div>
+    <!-- Header -->
+    <div id="mo-title" style="display:none"></div>
+    <div class="mo-dark-hdr">
+      <div class="mo-dh-date" id="mo-sub"></div>
+      <div class="mo-dh-body">
+        <div class="mo-tm" id="mo-home"></div>
+        <div class="mo-dh-score">
+          <span class="mo-dh-num" id="mo-res-h">–</span>
+          <span class="mo-dh-dash">:</span>
+          <span class="mo-dh-num" id="mo-res-a">–</span>
+        </div>
+        <div class="mo-tm mo-tm-away" id="mo-away"></div>
+      </div>
+      <div class="mo-dh-pen" id="mo-dh-pen"></div>
     </div>
-    <div class="si-row">
-      <div class="si-lbl">My Prediction</div>
-      <div class="si-wrap">
-        <input class="si" type="number" id="ph" min="0" max="20" placeholder="0">
+
+    <!-- GROUP prediction (hidden for KO) -->
+    <div id="grp-pred-row" style="display:none">
+      <div class="grp-score-wrap">
+        <div class="grp-score-col">
+          <input class="si" type="number" id="ph" min="0" max="20" placeholder="0">
+          <div class="si-team-lbl" id="grp-lbl-h"></div>
+        </div>
         <span class="si-dash">–</span>
-        <input class="si" type="number" id="pa" min="0" max="20" placeholder="0">
+        <div class="grp-score-col">
+          <input class="si" type="number" id="pa" min="0" max="20" placeholder="0">
+          <div class="si-team-lbl" id="grp-lbl-a"></div>
+        </div>
       </div>
     </div>
+
+    <!-- KO prediction (shown only for KO matches) -->
+    <div id="ko-pred-block" style="display:none">
+      <div class="ko-type-row">
+        <button class="ko-type-btn" id="kt-exact" onclick="setKoType('exact')">
+          <span class="ktb-label">Exact Score</span>
+          <span class="ktb-pts">+8 pts</span>
+        </button>
+        <button class="ko-type-btn" id="kt-winner" onclick="setKoType('winner')">
+          <span class="ktb-label">Pick Winner</span>
+          <span class="ktb-pts">+3 pts</span>
+        </button>
+        <button class="ko-type-btn" id="kt-penalties" onclick="setKoType('penalties')">
+          <span class="ktb-label">Penalties</span>
+          <span class="ktb-pts">+6 pts</span>
+        </button>
+      </div>
+      <div class="ko-risk-warning" id="ko-risk-warning"></div>
+      <div id="ko-exact-in">
+        <div class="ko-score-wrap">
+          <div class="ko-score-col">
+            <input class="si" type="number" id="ko-ph" min="0" max="20" placeholder="0" oninput="checkKoDraw()">
+            <div class="si-team-lbl" id="ko-lbl-h"></div>
+          </div>
+          <span class="si-dash">–</span>
+          <div class="ko-score-col">
+            <input class="si" type="number" id="ko-pa" min="0" max="20" placeholder="0" oninput="checkKoDraw()">
+            <div class="si-team-lbl" id="ko-lbl-a"></div>
+          </div>
+        </div>
+      </div>
+      <div id="ko-winner-in" style="display:none">
+        <div class="ko-win-row">
+          <button class="ko-win-btn" id="ko-win-h" onclick="setKoWin('h')">
+            <span class="ko-win-check">✓</span>
+            <span class="ko-win-flag" id="ko-win-h-flag"></span>
+            <span class="ko-win-name" id="ko-win-h-name">Home</span>
+          </button>
+          <button class="ko-win-btn" id="ko-win-a" onclick="setKoWin('a')">
+            <span class="ko-win-check">✓</span>
+            <span class="ko-win-flag" id="ko-win-a-flag"></span>
+            <span class="ko-win-name" id="ko-win-a-name">Away</span>
+          </button>
+        </div>
+      </div>
+      <div id="ko-pen-in" style="display:none">
+        <div class="ko-win-row">
+          <button class="ko-win-btn" id="ko-pen-h" onclick="setKoPen('h')">
+            <span class="ko-win-check">✓</span>
+            <span class="ko-win-flag" id="ko-pen-h-flag"></span>
+            <span class="ko-win-name" id="ko-pen-h-name">Home</span>
+          </button>
+          <button class="ko-win-btn" id="ko-pen-a" onclick="setKoPen('a')">
+            <span class="ko-win-check">✓</span>
+            <span class="ko-win-flag" id="ko-pen-a-flag"></span>
+            <span class="ko-win-name" id="ko-pen-a-name">Away</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT block (group + KO shared, KO gets penalties section) -->
     <div id="res-block" style="display:none">
+      <div class="mo-divider"></div>
       <div class="si-row">
-        <div class="si-lbl" style="color:var(--accent)">Actual Result</div>
+        <div class="si-lbl" style="color:var(--accent)">Result</div>
         <div class="si-wrap">
           <input class="si" type="number" id="rh" min="0" max="20" placeholder="0"
             style="border-color:rgba(212,168,67,.5)">
@@ -553,15 +714,37 @@ input:focus{outline:none;border-color:var(--accent)}
             style="border-color:rgba(212,168,67,.5)">
         </div>
       </div>
+      <!-- KO penalties result (admin, hidden for group matches) -->
+      <div id="ko-res-pen-row" style="display:none">
+        <label class="chk-row">
+          <input type="checkbox" id="ko-pen-chk" onchange="toggleKoResPen()">
+          Went to penalties
+        </label>
+        <div id="ko-pen-winner-row" style="display:none;margin-top:6px">
+          <div class="ko-win-row">
+            <button class="ko-win-btn" id="ko-rpen-h" onclick="setKoResPen('h')">
+              <span class="ko-win-check">✓</span>
+              <span class="ko-win-flag" id="ko-rpen-h-flag"></span>
+              <span class="ko-win-name" id="ko-rpen-h-name">Home wins pens</span>
+            </button>
+            <button class="ko-win-btn" id="ko-rpen-a" onclick="setKoResPen('a')">
+              <span class="ko-win-check">✓</span>
+              <span class="ko-win-flag" id="ko-rpen-a-flag"></span>
+              <span class="ko-win-name" id="ko-rpen-a-name">Away wins pens</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+
     <div class="mo-preds" id="mo-preds"></div>
     <label class="chk-row" id="res-chk-row">
       <input type="checkbox" id="res-chk" onchange="toggleRes()">
       Enter / update actual match result
     </label>
     <div class="mo-actions">
-      <button class="btn-sec" onclick="closeMo()">Cancel</button>
-      <button class="btn-primary" id="mo-save-btn" onclick="saveMo()">Save ✓</button>
+      <button class="mo-save-btn" id="mo-save-btn" onclick="saveMo()">Save Prediction</button>
+      <button class="mo-cancel-btn" onclick="closeMo()">Cancel</button>
     </div>
   </div>
 </div>
@@ -712,22 +895,22 @@ const KO = {
   // Left half: M74→M77→M89, M73→M75→M90, M83→M84→M93, M81→M82→M94 → M97→M98→M101
   // Right half: M76→M78→M91, M79→M80→M92, M86→M88→M95, M85→M87→M96 → M99→M100→M102
   r32:{title:'Round of 32',matches:[
-    {id:'M74',h:'Germany',       a:'3ABCDF',        d:'2026-06-29',v:'TBD'},
-    {id:'M77',h:'1I',            a:'3CDFGH',        d:'2026-06-30',v:'TBD'},
-    {id:'M73',h:'South Africa',  a:'Canada',        d:'2026-06-28',v:'TBD'},
-    {id:'M75',h:'Netherlands',   a:'Morocco',       d:'2026-06-30',v:'TBD'},
-    {id:'M83',h:'2K',            a:'2L',            d:'2026-07-03',v:'TBD'},
-    {id:'M84',h:'1H',            a:'2J',            d:'2026-07-02',v:'TBD'},
-    {id:'M81',h:'USA',           a:'Bosnia & Herz.',d:'2026-07-02',v:'TBD'},
-    {id:'M82',h:'1G',            a:'3AEHIJ',        d:'2026-07-01',v:'TBD'},
-    {id:'M76',h:'Brazil',        a:'Japan',         d:'2026-06-29',v:'TBD'},
-    {id:'M78',h:'Ivory Coast',   a:'2I',            d:'2026-06-30',v:'TBD'},
-    {id:'M79',h:'Mexico',        a:'3CEFHI',        d:'2026-07-01',v:'TBD'},
-    {id:'M80',h:'1L',            a:'3EHIJK',        d:'2026-07-01',v:'TBD'},
-    {id:'M86',h:'Argentina',     a:'2H',            d:'2026-07-04',v:'TBD'},
-    {id:'M88',h:'Australia',     a:'2G',            d:'2026-07-03',v:'TBD'},
-    {id:'M85',h:'Switzerland',   a:'3EFGIJ',        d:'2026-07-03',v:'TBD'},
-    {id:'M87',h:'1K',            a:'3DEIJL',        d:'2026-07-04',v:'TBD'}
+    {id:'M73',h:'South Africa',  a:'Canada',        d:'2026-06-28',t:'21:00',v:'Kansas City'},
+    {id:'M74',h:'Germany',       a:'3ABCDF',        d:'2026-06-29',t:'21:00',v:'Dallas'},
+    {id:'M76',h:'Brazil',        a:'Japan',         d:'2026-06-29',t:'23:00',v:'New York'},
+    {id:'M77',h:'1I',            a:'3CDFGH',        d:'2026-06-30',t:'19:00',v:'Los Angeles'},
+    {id:'M75',h:'Netherlands',   a:'Morocco',       d:'2026-06-30',t:'21:00',v:'Miami'},
+    {id:'M78',h:'Ivory Coast',   a:'2I',            d:'2026-06-30',t:'23:00',v:'Philadelphia'},
+    {id:'M82',h:'1G',            a:'3AEHIJ',        d:'2026-07-01',t:'19:00',v:'Seattle'},
+    {id:'M79',h:'Mexico',        a:'3CEFHI',        d:'2026-07-01',t:'21:00',v:'Mexico City'},
+    {id:'M80',h:'1L',            a:'3EHIJK',        d:'2026-07-01',t:'23:00',v:'San Francisco'},
+    {id:'M84',h:'1H',            a:'2J',            d:'2026-07-02',t:'21:00',v:'Atlanta'},
+    {id:'M81',h:'USA',           a:'Bosnia & Herz.',d:'2026-07-02',t:'23:00',v:'Boston'},
+    {id:'M83',h:'2K',            a:'2L',            d:'2026-07-03',t:'19:00',v:'Guadalajara'},
+    {id:'M88',h:'Australia',     a:'2G',            d:'2026-07-03',t:'21:00',v:'Vancouver'},
+    {id:'M85',h:'Switzerland',   a:'3EFGIJ',        d:'2026-07-03',t:'23:00',v:'Kansas City'},
+    {id:'M86',h:'Argentina',     a:'2H',            d:'2026-07-04',t:'21:00',v:'Dallas'},
+    {id:'M87',h:'1K',            a:'3DEIJL',        d:'2026-07-04',t:'23:00',v:'Los Angeles'}
   ]},
   r16:{title:'Round of 16',matches:[
     {id:'M89',h:'W M74',a:'W M77',d:'2026-07-04',v:'TBD'},
@@ -909,8 +1092,38 @@ function pts(pred,res){
   return 0;
 }
 
+// ── KO SCORING ──
+let _koType=null,_koWin=null,_koResPen=null;
+
+function ptsKO(pred,result){
+  if(!pred||!result)return null;
+  const wentToPen=!!result.pen;
+  const resWin=result.h>result.a?'h':'a';
+  const resWinFinal=wentToPen?result.pen:resWin;
+
+  if(pred.type==='exact'){
+    if(wentToPen){
+      // Match went to pens — exact pred counts as winner pick
+      const predWin=pred.h>pred.a?'h':'a';
+      return predWin===resWinFinal?3:-2;
+    }
+    const ph=+pred.h,pa=+pred.a,rh=+result.h,ra=+result.a;
+    if(ph===rh&&pa===ra)return 8;
+    const predWin=ph>pa?'h':'a';
+    if(predWin!==resWin)return -2;
+    return(ph-pa)===(rh-ra)?4:3;
+  }
+  if(pred.type==='winner')return pred.win===resWinFinal?3:-5;
+  if(pred.type==='penalties'){
+    if(wentToPen&&pred.pen===result.pen)return 6;
+    return -2;
+  }
+  return null;
+}
+
 function userStats(uid){
   let tot=0,ex=0,cor=0,wr=0;
+  // Group stage
   allGrpMatches().forEach(m=>{
     const r=S.results[m.id];
     if(!r)return;
@@ -922,6 +1135,19 @@ function userStats(uid){
     else if(sc>=2)cor++;
     else wr++;
   });
+  // Playoff (KO)
+  Object.values(KO).forEach(rd=>rd.matches.forEach(m=>{
+    const r=S.results[m.id];
+    if(!r)return;
+    const p=S.preds[uid]?.[m.id];
+    if(!p)return;
+    const sc=ptsKO(p,r);
+    if(sc===null)return;
+    tot+=sc;
+    if(sc===8)ex++;
+    else if(sc>0)cor++;
+    else wr++;
+  }));
   return{tot,ex,cor,wr};
 }
 
@@ -1054,20 +1280,9 @@ function renderDash(){
 
   updateStandings();
 
-  const finished=all.filter(m=>S.results[m.id]).slice(-4).reverse();
-  const recEl=document.getElementById('d-recent');
-  if(finished.length){
-    recEl.innerHTML=finished.map(m=>{
-      const r=S.results[m.id];
-      return`<div class="row-match">
-        <div class="row-date">${fmtDate(m.d)}</div>
-        <div class="row-teams">${fl(m.h)} ${m.h} <strong>${r.h}–${r.a}</strong> ${m.a} ${fl(m.a)}</div>
-        <div class="row-grp">Grp ${m.grp}</div>
-      </div>`;
-    }).join('');
-  }else{
-    recEl.innerHTML='<div style="color:var(--dim);font-size:13px">No results yet</div>';
-  }
+  // R32 match grid
+  const r32El=document.getElementById('d-r32');
+  if(r32El)r32El.innerHTML=KO.r32.matches.map(renderKOMItem).join('');
 }
 
 // ── Race to the trophy (dashboard standings) ──
@@ -1131,11 +1346,11 @@ async function savePredQuick(matchId){
 // ─────────────────────────────────────────
 function renderGroups(){
   const filter=S.gFilter;
-  let html='';
+  let standHtml='', matchHtml='';
   for(const[g,data]of Object.entries(WC)){
     if(filter!=='all'&&filter!==g)continue;
     const st=groupStandings(g);
-    html+=`<div class="g-card">
+    standHtml+=`<div class="g-card">
       <div class="g-hdr"><span>Group ${g}</span><span>${data.teams.join(' · ')}</span></div>
       <table class="std-table">
         <thead><tr>
@@ -1151,13 +1366,13 @@ function renderGroups(){
           <td><strong>${r.pts}</strong></td>
         </tr>`).join('')}</tbody>
       </table>
-      <div class="m-section">
-        <div class="m-section-ttl">Matches</div>
-        ${data.matches.map(m=>renderMItem(m,g)).join('')}
-      </div>
     </div>`;
+    matchHtml+=data.matches.map(m=>renderMItem(m,g)).join('');
   }
-  document.getElementById('g-grid').innerHTML=html;
+  document.getElementById('g-grid').innerHTML=standHtml;
+  document.getElementById('g-matches').innerHTML=matchHtml;
+  const hdr=document.getElementById('g-matches-hdr');
+  if(hdr)hdr.style.display=matchHtml?'block':'none';
 }
 
 function renderMItem(m,g){
@@ -1171,23 +1386,27 @@ function renderMItem(m,g){
     :`<div class="m-score"><div class="sn" style="color:var(--dim)">?</div><span class="sep">–</span><div class="sn" style="color:var(--dim)">?</div></div>`;
 
   const isFinished=!!r;
-  const predRow=`<div class="pred-row" style="flex-wrap:wrap">
-    ${Object.keys(USERS).map(u=>{
-      // hide other users' predictions until match is finished
-      if(!isFinished&&u!==S.user)return'';
-      const p=S.preds[u]?.[m.id];
-      const p2=r?pts(p,r):null;
-      return`<div class="pred-chip c-${u}" style="min-width:45%">
-        <span class="pred-lbl">${USERS[u].av} ${USERS[u].name}</span>
-        <span class="pred-val">${p?p.h+'-'+p.a:'—'}</span>
-        ${p2!==null?`<span class="pred-pts">${p2}pt</span>`:''}
-      </div>`;
-    }).join('')}
-  </div>`;
+  const predRow=`<div class="mo-pred-list" style="margin-top:8px">${Object.keys(USERS).map(u=>{
+    if(!isFinished&&u!==S.user)return'';
+    const p=S.preds[u]?.[m.id];
+    const isMe=u===S.user;
+    const sc=r?pts(p,r):null;
+    const chip=p
+      ?`<span class="mo-pred-chip chip-exact"><span class="mo-pred-chip-val">${p.h}–${p.a}</span><span class="mo-pred-chip-lbl">exact</span></span>`
+      :`<span class="mo-pred-chip chip-none"><span class="mo-pred-chip-val">—</span></span>`;
+    const ptsEl=sc!==null
+      ?`<span class="mo-pred-pts ${sc>=0?'pos':'neg'}">${sc>0?'+':''}${sc}</span>`
+      :`<span class="mo-pred-pts unk">—</span>`;
+    return`<div class="mo-pred-row2">
+      <div class="mo-pred-av c-${u}">${USERS[u].av}</div>
+      <div class="mo-pred-name">${USERS[u].name}${isMe?'<span class="mo-pred-you">you</span>':''}</div>
+      ${chip}${ptsEl}
+    </div>`;
+  }).join('')}</div>`;
 
   return`<div class="m-item" onclick="openMo('${m.id}')">
     <div class="m-top">
-      <span class="m-date">${fmtDate(m.d)} · ${m.v}</span>
+      <span class="m-date">Group ${g} · ${fmtDate(m.d)} · ${m.v}</span>
       <span class="m-status ${st.cls}">${st.txt}</span>
     </div>
     <div class="m-teams">
@@ -1202,6 +1421,50 @@ function renderMItem(m,g){
 // ─────────────────────────────────────────
 //  RENDER: BRACKET
 // ─────────────────────────────────────────
+function renderKOMItem(m){
+  const r=S.results[m.id];
+  const st=getStatus(m);
+  const isFinished=!!r;
+  const th=qs(m.h),ta=qs(m.a);
+  const fh=fl(m.h)||'',fa=fl(m.a)||'';
+  const scoreHtml=r
+    ?`<div class="m-score"><div class="sn">${r.h}</div><span class="sep">–</span><div class="sn">${r.a}</div>${r.pen?`<span style="font-size:9px;color:var(--dim);margin-left:2px">P</span>`:''}</div>`
+    :`<div class="m-score"><div class="sn" style="color:var(--dim)">?</div><span class="sep">–</span><div class="sn" style="color:var(--dim)">?</div></div>`;
+  const mkChipKO=(p)=>{
+    if(!p)return`<span class="mo-pred-chip chip-none"><span class="mo-pred-chip-val">—</span></span>`;
+    if(p.type==='exact')return`<span class="mo-pred-chip chip-exact"><span class="mo-pred-chip-val">${p.h}–${p.a}</span><span class="mo-pred-chip-lbl">exact</span></span>`;
+    if(p.type==='winner')return`<span class="mo-pred-chip chip-winner"><span class="mo-pred-chip-val">${p.win==='h'?fh:fa} ${p.win==='h'?th:ta}</span><span class="mo-pred-chip-lbl">winner</span></span>`;
+    if(p.type==='penalties')return`<span class="mo-pred-chip chip-pen"><span class="mo-pred-chip-val">${p.pen==='h'?fh:fa} ${p.pen==='h'?th:ta}</span><span class="mo-pred-chip-lbl">pen</span></span>`;
+    return`<span class="mo-pred-chip chip-none"><span class="mo-pred-chip-val">—</span></span>`;
+  };
+  const predRow=`<div class="mo-pred-list" style="margin-top:8px">${Object.keys(USERS).map(u=>{
+    if(!isFinished&&u!==S.user)return'';
+    const p=S.preds[u]?.[m.id];
+    const isMe=u===S.user;
+    const sc=r?ptsKO(p,r):null;
+    const ptsEl=sc!==null
+      ?`<span class="mo-pred-pts ${sc>=0?'pos':'neg'}">${sc>0?'+':''}${sc}</span>`
+      :`<span class="mo-pred-pts unk">—</span>`;
+    return`<div class="mo-pred-row2">
+      <div class="mo-pred-av c-${u}">${USERS[u].av}</div>
+      <div class="mo-pred-name">${USERS[u].name}${isMe?'<span class="mo-pred-you">you</span>':''}</div>
+      ${mkChipKO(p)}${ptsEl}
+    </div>`;
+  }).join('')}</div>`;
+  return`<div class="m-item" onclick="openMo('${m.id}')">
+    <div class="m-top">
+      <span class="m-date">${fmtDate(m.d)} · ${m.v||'TBD'}</span>
+      <span class="m-status ${st.cls}">${st.txt}</span>
+    </div>
+    <div class="m-teams">
+      <div class="m-team">${fh} ${th}</div>
+      ${scoreHtml}
+      <div class="m-team away">${ta} ${fa}</div>
+    </div>
+    ${predRow}
+  </div>`;
+}
+
 function renderBracket(){
   const r32=KO.r32.matches,r16=KO.r16.matches,qf=KO.qf.matches,sf=KO.sf.matches;
   const fin=KO.fin.matches[0],tp=KO.tp.matches[0];
@@ -1211,15 +1474,33 @@ function renderBracket(){
     const rh=r?+r.h:null,ra=r?+r.a:null;
     const th=qs(m.h),ta=qs(m.a);
     const cls=big?'ko-match ko-final-match':'ko-match';
-    return`<div class="${cls}">
+    const isKnown=QUALIFIED[m.h]&&QUALIFIED[m.a];
+    const clickable=isKnown||r;
+    // Penalty display
+    const penLabel=r?.pen?` +pen`:'';
+    // User's KO prediction
+    const kp=S.user?S.preds[S.user]?.[m.id]:null;
+    let predMini='';
+    if(kp){
+      const ptVal=r?ptsKO(kp,r):null;
+      let predStr='';
+      if(kp.type==='exact')predStr=`${kp.h}–${kp.a}`;
+      else if(kp.type==='winner')predStr=`🏆${kp.win==='h'?th:ta}`;
+      else if(kp.type==='penalties')predStr=`🎯${kp.pen==='h'?th:ta}`;
+      const ptsCls=ptVal===null?'':(ptVal===8?'ko-pts-8':ptVal===6?'ko-pts-6':ptVal===4?'ko-pts-4':ptVal>0?'ko-pts-3':'ko-pts-neg');
+      const ptsStr=ptVal!==null?`<span class="${ptsCls}">${ptVal>0?'+':''}${ptVal}</span>`:'';
+      predMini=`<div class="ko-pred-mini"><span class="kp-val">${predStr}</span>${ptsStr}</div>`;
+    }
+    return`<div class="${cls}" ${clickable?`onclick="openMo('${m.id}')" title="Click to predict"`:''}>
       <div class="ko-team ${r&&rh>ra?'win':''}">
         ${QUALIFIED[m.h]?bf(th):''}<span${!QUALIFIED[m.h]?' class="ko-tbd"':''}>${th}</span>
-        ${r?`<span class="ko-score">${rh}</span>`:''}
+        ${r?`<span class="ko-score">${rh}${r.pen&&r.pen==='h'?'🏆':''}</span>`:''}
       </div>
       <div class="ko-team ${r&&ra>rh?'win':''}">
         ${QUALIFIED[m.a]?bf(ta):''}<span${!QUALIFIED[m.a]?' class="ko-tbd"':''}>${ta}</span>
-        ${r?`<span class="ko-score">${ra}</span>`:''}
+        ${r?`<span class="ko-score">${ra}${r.pen&&r.pen==='a'?'🏆':''}</span>`:''}
       </div>
+      ${predMini}
     </div>`;
   }
 
@@ -1263,6 +1544,13 @@ function renderBracket(){
         ${col(sf.slice(1,2))}${col(qf.slice(2,4))}${col(r16.slice(4,8))}${col(r32.slice(8,16))}
       </div>
     </div>
+  </div>
+  <div class="ko-match-list">
+    ${Object.values(KO).map(rd=>`
+      <div class="g-matches-hdr">${rd.title}</div>
+      <div class="matches-grid" style="margin-bottom:24px">
+        ${rd.matches.map(renderKOMItem).join('')}
+      </div>`).join('')}
   </div>`;
 }
 
@@ -1337,62 +1625,193 @@ function findM(id){
   return KO_MAP[id]||null;
 }
 
+// ── KO modal helpers ──
+const KO_RISK={
+  exact:'Wrong winner costs -2 pts',
+  winner:'Wrong prediction costs -5 pts',
+  penalties:'Wrong prediction costs -2 pts'
+};
+function checkKoDraw(){
+  const ph=document.getElementById('ko-ph');
+  const pa=document.getElementById('ko-pa');
+  const isDraw=ph.value!==''&&pa.value!==''&&+ph.value===+pa.value;
+  const red='#FF4444';
+  ph.style.borderColor=isDraw?red:'';
+  pa.style.borderColor=isDraw?red:'';
+  const rw=document.getElementById('ko-risk-warning');
+  if(rw&&_koType==='exact')rw.textContent=isDraw?'Draw not allowed in knockout':'Wrong winner costs -2 pts';
+  const btn=document.getElementById('mo-save-btn');
+  if(btn&&!btn.textContent.includes('Locked'))btn.disabled=isDraw;
+}
+function _updateSaveBtn(){
+  const btn=document.getElementById('mo-save-btn');
+  if(!btn||btn.textContent.includes('Locked'))return;
+  btn.disabled=(_koType==='winner'||_koType==='penalties')&&!_koWin;
+}
+function setKoType(type){
+  _koType=type;
+  _koWin=null;
+  ['ko-win-h','ko-win-a','ko-pen-h','ko-pen-a'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.remove('active');
+  });
+  ['exact','winner','penalties'].forEach(t=>{
+    document.getElementById('kt-'+t).classList.toggle('active',t===type);
+  });
+  document.getElementById('ko-exact-in').style.display=type==='exact'?'block':'none';
+  document.getElementById('ko-winner-in').style.display=type==='winner'?'block':'none';
+  document.getElementById('ko-pen-in').style.display=type==='penalties'?'block':'none';
+  ['ko-ph','ko-pa'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.borderColor='';});
+  const rw=document.getElementById('ko-risk-warning');
+  if(rw)rw.textContent=KO_RISK[type]||'';
+  _updateSaveBtn();
+}
+function setKoWin(w){
+  _koWin=w;
+  document.getElementById('ko-win-h').classList.toggle('active',w==='h');
+  document.getElementById('ko-win-a').classList.toggle('active',w==='a');
+  _updateSaveBtn();
+}
+function setKoPen(w){
+  _koWin=w;
+  document.getElementById('ko-pen-h').classList.toggle('active',w==='h');
+  document.getElementById('ko-pen-a').classList.toggle('active',w==='a');
+  _updateSaveBtn();
+}
+function setKoResPen(w){
+  _koResPen=w;
+  document.getElementById('ko-rpen-h').classList.toggle('active',w==='h');
+  document.getElementById('ko-rpen-a').classList.toggle('active',w==='a');
+}
+function toggleKoResPen(){
+  const chk=document.getElementById('ko-pen-chk').checked;
+  document.getElementById('ko-pen-winner-row').style.display=chk?'block':'none';
+  if(!chk)_koResPen=null;
+}
+
 function openMo(id){
   const m=findM(id);
   if(!m)return;
   S.moId=id;
+  const isKO=!!KO_MAP[id];
+  const isAdmin=S.user==='dima';
 
-  document.getElementById('mo-title').textContent=`${fl(m.h)} ${m.h} vs ${m.a} ${fl(m.a)}`;
   document.getElementById('mo-sub').textContent=`${fmtDate(m.d)} · ${m.v||'TBD'}`;
-  document.getElementById('mo-home').textContent=`${fl(m.h)} ${m.h}`;
-  document.getElementById('mo-away').textContent=`${m.a} ${fl(m.a)}`;
+  document.getElementById('mo-home').textContent=`${fl(m.h)||''} ${qs(m.h)}`;
+  document.getElementById('mo-away').textContent=`${qs(m.a)} ${fl(m.a)||''}`;
 
-  const up=S.preds[S.user]?.[id];
-  document.getElementById('ph').value=up?up.h:'';
-  document.getElementById('pa').value=up?up.a:'';
+  // Set team labels in score inputs and winner buttons
+  const th=qs(m.h),ta=qs(m.a),fh=fl(m.h)||'',fa=fl(m.a)||'';
+  [['ko-lbl-h',th],['ko-lbl-a',ta],['grp-lbl-h',th],['grp-lbl-a',ta],
+   ['ko-win-h-flag',fh],['ko-win-h-name',th],['ko-win-a-flag',fa],['ko-win-a-name',ta],
+   ['ko-pen-h-flag',fh],['ko-pen-h-name',th],['ko-pen-a-flag',fa],['ko-pen-a-name',ta],
+   ['ko-rpen-h-flag',fh],['ko-rpen-h-name',th],['ko-rpen-a-flag',fa],['ko-rpen-a-name',ta]
+  ].forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=val;});
+
+  // Toggle group vs KO prediction UI
+  document.getElementById('grp-pred-row').style.display=isKO?'none':'block';
+  document.getElementById('ko-pred-block').style.display=isKO?'block':'none';
+  document.getElementById('ko-res-pen-row').style.display=(isKO&&isAdmin)?'block':'none';
 
   const r=S.results[id];
+  const predLocked=!!r||matchStarted(m);
+
+  // Dark header score
+  {const resH=document.getElementById('mo-res-h'),resA=document.getElementById('mo-res-a'),penEl=document.getElementById('mo-dh-pen');
+  if(r){resH.textContent=r.h;resH.classList.remove('empty');resA.textContent=r.a;resA.classList.remove('empty');
+    penEl.textContent=r.pen?`Pen: ${r.pen==='h'?fh+' '+th:fa+' '+ta} wins`:'';
+  }else{resH.textContent='–';resH.classList.add('empty');resA.textContent='–';resA.classList.add('empty');penEl.textContent='';}}
+
+
+  if(!isKO){
+    const up=S.preds[S.user]?.[id];
+    const ph=document.getElementById('ph');
+    const pa=document.getElementById('pa');
+    ph.value=up?up.h:'';
+    pa.value=up?up.a:'';
+    ph.readOnly=predLocked;pa.readOnly=predLocked;
+    ph.style.opacity=predLocked?'0.5':'1';
+    pa.style.opacity=predLocked?'0.5':'1';
+  } else {
+    // Load KO prediction into UI
+    _koType=null;_koWin=null;_koResPen=null;
+    const kp=S.preds[S.user]?.[id];
+    if(kp&&!predLocked){
+      setKoType(kp.type);
+      if(kp.type==='exact'){document.getElementById('ko-ph').value=kp.h??'';document.getElementById('ko-pa').value=kp.a??'';}
+      else if(kp.type==='winner')setKoWin(kp.win);
+      else if(kp.type==='penalties')setKoPen(kp.pen);
+    } else if(!predLocked){
+      setKoType('exact'); // default
+    }
+    // Disable KO pred if locked
+    const koInputs=['ko-ph','ko-pa'];
+    koInputs.forEach(elId=>{const el=document.getElementById(elId);if(el){el.readOnly=predLocked;el.style.opacity=predLocked?'0.5':'1';}});
+    document.querySelectorAll('.ko-type-btn,.ko-win-btn').forEach(b=>{b.disabled=predLocked;});
+  }
+
+  // Result UI (shared for group + KO)
   document.getElementById('rh').value=r?r.h:'';
   document.getElementById('ra').value=r?r.a:'';
-  const isAdmin=S.user==='dima';
   document.getElementById('res-chk-row').style.display=isAdmin?'flex':'none';
   document.getElementById('res-chk').checked=!!r&&isAdmin;
   document.getElementById('res-block').style.display=(r&&isAdmin)?'block':'none';
+  // KO penalties result
+  if(isKO&&isAdmin){
+    document.getElementById('ko-pen-chk').checked=!!(r&&r.pen);
+    document.getElementById('ko-pen-winner-row').style.display=(r&&r.pen)?'block':'none';
+    _koResPen=r?.pen||null;
+    if(_koResPen)setKoResPen(_koResPen);
+  }
 
-  // Predictions locked if match has result OR match has already started
-  const predLocked=!!r||matchStarted(m);
-  const ph=document.getElementById('ph');
-  const pa=document.getElementById('pa');
-  ph.readOnly=predLocked;
-  pa.readOnly=predLocked;
-  ph.style.opacity=predLocked?'0.5':'1';
-  pa.style.opacity=predLocked?'0.5':'1';
-  // Save button always visible — result can always be entered/corrected
-
-  // Show other users' predictions only if match is finished
-  const myP=S.preds[S.user]?.[id];
+  // Predictions display
+  const mkChip=(p,isKO,fh,fa,th,ta)=>{
+    if(!p)return`<span class="mo-pred-chip chip-none"><span class="mo-pred-chip-val">—</span></span>`;
+    if(!isKO)return`<span class="mo-pred-chip chip-exact"><span class="mo-pred-chip-val">${p.h}–${p.a}</span><span class="mo-pred-chip-lbl">exact</span></span>`;
+    if(p.type==='exact')return`<span class="mo-pred-chip chip-exact"><span class="mo-pred-chip-val">${p.h}–${p.a}</span><span class="mo-pred-chip-lbl">exact</span></span>`;
+    if(p.type==='winner')return`<span class="mo-pred-chip chip-winner"><span class="mo-pred-chip-val">${p.win==='h'?fh:fa} ${p.win==='h'?th:ta}</span><span class="mo-pred-chip-lbl">winner</span></span>`;
+    if(p.type==='penalties')return`<span class="mo-pred-chip chip-pen"><span class="mo-pred-chip-val">${p.pen==='h'?fh:fa} ${p.pen==='h'?th:ta}</span><span class="mo-pred-chip-lbl">pen</span></span>`;
+    return`<span class="mo-pred-chip chip-none"><span class="mo-pred-chip-val">—</span></span>`;
+  };
   let predsHtml='';
-
   if(r){
-    // Match finished — show everyone's predictions
-    Object.keys(USERS).filter(u=>u!==S.user).forEach(u=>{
+    const ptsFn=isKO?ptsKO:pts;
+    predsHtml=`<div class="mo-pred-list">${Object.keys(USERS).map(u=>{
       const op=S.preds[u]?.[id];
-      if(!op)return;
-      const opPts=pts(op,r);
-      predsHtml+=`<div class="mo-pred-row">
-        <span>${USERS[u].av} ${USERS[u].name}: <strong>${op.h}–${op.a}</strong></span>
-        ${opPts!==null?`<span style="color:var(--green);font-weight:800">${opPts} pts</span>`:''}
+      const isMe=u===S.user;
+      const sc=op?ptsFn(op,r):null;
+      return`<div class="mo-pred-row2">
+        <div class="mo-pred-av c-${u}">${USERS[u].av}</div>
+        <div class="mo-pred-name">${USERS[u].name}${isMe?'<span class="mo-pred-you">you</span>':''}</div>
+        ${mkChip(op,isKO,fh,fa,th,ta)}
+        ${sc!==null?`<span class="mo-pred-pts ${sc>=0?'pos':'neg'}">${sc>0?'+':''}${sc}</span>`:`<span class="mo-pred-pts unk">—</span>`}
       </div>`;
-    });
-    const myPts=myP?pts(myP,r):null;
-    predsHtml+=`<div class="mo-res-row">
-      <span style="color:var(--accent)">⚽ Result: <strong>${r.h}–${r.a}</strong></span>
-      ${myPts!==null?`<span style="color:var(--green);font-weight:800">You: ${myPts} pts</span>`:''}
-    </div>`;
+    }).join('')}</div>`;
+  } else {
+    // Before result: only show own prediction
+    const myP=S.preds[S.user]?.[id];
+    if(myP){
+      predsHtml=`<div class="mo-pred-list"><div class="mo-pred-row2">
+        <div class="mo-pred-av c-${S.user}">${USERS[S.user].av}</div>
+        <div class="mo-pred-name">${USERS[S.user].name}<span class="mo-pred-you">you</span></div>
+        ${mkChip(myP,isKO,fh,fa,th,ta)}
+        <span class="mo-pred-pts unk">?</span>
+      </div></div>`;
+    }
   }
   document.getElementById('mo-preds').innerHTML=predsHtml;
+
+  // Save button state
+  const saveBtn=document.getElementById('mo-save-btn');
+  if(predLocked){
+    saveBtn.textContent='Match Locked 🔒';
+    saveBtn.disabled=true;
+  } else {
+    saveBtn.textContent='Save Prediction';
+    if(isKO)_updateSaveBtn();
+    else saveBtn.disabled=false;
+  }
+
   document.getElementById('modal').classList.add('open');
-  if(!finished) ph.focus();
 }
 
 function closeMo(){
@@ -1407,18 +1826,45 @@ function toggleRes(){
 
 async function saveMo(){
   if(!S.moId)return;
-  const ph=document.getElementById('ph').value;
-  const pa=document.getElementById('pa').value;
+  const isKO=!!KO_MAP[S.moId];
   const m2=findM(S.moId);
   const predLocked=!!S.results[S.moId]||matchStarted(m2);
-  if(!predLocked&&ph!==''&&pa!==''){
-    if(!S.preds[S.user])S.preds[S.user]={};
-    S.preds[S.user][S.moId]={h:+ph,a:+pa};
+  if(!S.preds[S.user])S.preds[S.user]={};
+
+  if(!predLocked){
+    if(!isKO){
+      const ph=document.getElementById('ph').value;
+      const pa=document.getElementById('pa').value;
+      if(ph!==''&&pa!=='') S.preds[S.user][S.moId]={h:+ph,a:+pa};
+    } else {
+      if(_koType==='exact'){
+        const h=document.getElementById('ko-ph').value;
+        const a=document.getElementById('ko-pa').value;
+        if(h===''||a===''){toast('Enter both scores','err');return;}
+        const hv=+h,av=+a;
+        if(hv===av){toast('No draws in KO — pick a winner','err');return;}
+        S.preds[S.user][S.moId]={type:'exact',h:hv,a:av};
+      } else if(_koType==='winner'){
+        if(!_koWin){toast('Select winner','err');return;}
+        S.preds[S.user][S.moId]={type:'winner',win:_koWin};
+      } else if(_koType==='penalties'){
+        if(!_koWin){toast('Select penalty winner','err');return;}
+        S.preds[S.user][S.moId]={type:'penalties',pen:_koWin};
+      } else {toast('Select prediction type','err');return;}
+    }
   }
+
   if(S.user==='dima'&&document.getElementById('res-chk').checked){
     const rh=document.getElementById('rh').value;
     const ra=document.getElementById('ra').value;
-    if(rh!==''&&ra!=='') S.results[S.moId]={h:+rh,a:+ra};
+    if(rh!==''&&ra!==''){
+      const result={h:+rh,a:+ra};
+      if(isKO&&document.getElementById('ko-pen-chk')?.checked){
+        if(!_koResPen){toast('Select penalty winner for result','err');return;}
+        result.pen=_koResPen;
+      }
+      S.results[S.moId]=result;
+    }
   }
   await saveS();
   closeMo();
@@ -1429,12 +1875,15 @@ async function saveMo(){
 // ─────────────────────────────────────────
 //  NAV
 // ─────────────────────────────────────────
+const PAGES=['dash','groups','bracket','lb'];
 function goPage(pg){
+  if(!PAGES.includes(pg))pg='dash';
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('pg-'+pg).classList.add('active');
   document.querySelector(`.nav-btn[data-pg="${pg}"]`).classList.add('active');
   S.curPg=pg;
+  if(location.hash.slice(1)!==pg)location.hash=pg;
   renderCurrent();
 }
 
@@ -1465,20 +1914,22 @@ function toast(msg,type='ok'){
 //  INIT
 // ─────────────────────────────────────────
 function initApp(){
-  S.curPg='dash';
+  const hash=location.hash.slice(1);
+  S.curPg=PAGES.includes(hash)?hash:'dash';
 
   // Build group filters
   const fb=document.getElementById('g-filters');
   fb.innerHTML=`<button class="ftab active" onclick="filterGroup('all',this)">All Groups</button>`+
     Object.keys(WC).map(g=>`<button class="ftab" onclick="filterGroup('${g}',this)">Group ${g}</button>`).join('');
 
-  renderDash();
+  goPage(S.curPg);
 }
 
 // ─────────────────────────────────────────
 //  STARTUP
 // ─────────────────────────────────────────
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMo();});
+window.addEventListener('hashchange',()=>{if(S.user)goPage(location.hash.slice(1));});
 
 function toggleTheme(){
   const dark=document.documentElement.getAttribute('data-theme')==='dark';
