@@ -581,12 +581,8 @@ input:focus{outline:none;border-color:var(--accent)}
               <div class="rule-txt"><strong>Penalties</strong> — match went to pen + correct winner</div>
             </div>
             <div class="rule">
-              <div class="rule-pt" style="background:rgba(150,150,150,.15);color:var(--dim)">0</div>
-              <div class="rule-txt"><strong>Exact: right winner, different margin</strong> — no points, no penalty</div>
-            </div>
-            <div class="rule">
               <div class="rule-pt" style="background:rgba(229,57,53,.12);color:#ef9a9a">-2</div>
-              <div class="rule-txt"><strong>Wrong winner</strong> — exact or pen prediction, wrong team</div>
+              <div class="rule-txt"><strong>Wrong winner or different margin</strong> — exact or pen type</div>
             </div>
             <div class="rule">
               <div class="rule-pt" style="background:rgba(229,57,53,.2);color:#ef5350">-5</div>
@@ -1175,7 +1171,7 @@ function ptsKO(pred,result){
     if(ph===rh&&pa===ra)return 8;
     const predWin=ph>pa?'h':'a';
     if(predWin!==resWin)return -2;
-    return(ph-pa)===(rh-ra)?4:0;
+    return(ph-pa)===(rh-ra)?4:-2;
   }
   if(pred.type==='winner')return pred.win===resWinFinal?3:-5;
   if(pred.type==='penalties'){
