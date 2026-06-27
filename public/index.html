@@ -566,11 +566,11 @@ input:focus{outline:none;border-color:var(--accent)}
           <div class="rule-list">
             <div class="rule">
               <div class="rule-pt" style="background:rgba(255,215,0,.2);color:#ffd700">+8</div>
-              <div class="rule-txt"><strong>Exact score</strong> — correct final score (regular + extra time)</div>
+              <div class="rule-txt"><strong>Exact score</strong> — correct final score (reg. + extra time)</div>
             </div>
             <div class="rule">
               <div class="rule-pt" style="background:rgba(33,150,243,.2);color:#64b5f6">+4</div>
-              <div class="rule-txt"><strong>Same margin</strong> — correct winner, same goal difference (2:1 → 3:2)</div>
+              <div class="rule-txt"><strong>Same margin</strong> — right winner, same goal diff (2:1 → 3:2)</div>
             </div>
             <div class="rule">
               <div class="rule-pt" style="background:rgba(0,200,83,.2);color:var(--green)">+3</div>
@@ -578,15 +578,19 @@ input:focus{outline:none;border-color:var(--accent)}
             </div>
             <div class="rule">
               <div class="rule-pt" style="background:rgba(156,39,176,.2);color:#ce93d8">+6</div>
-              <div class="rule-txt"><strong>Penalties</strong> — correct penalty winner</div>
+              <div class="rule-txt"><strong>Penalties</strong> — match went to pen + correct winner</div>
+            </div>
+            <div class="rule">
+              <div class="rule-pt" style="background:rgba(150,150,150,.15);color:var(--dim)">0</div>
+              <div class="rule-txt"><strong>Exact: right winner, different margin</strong> — no points, no penalty</div>
             </div>
             <div class="rule">
               <div class="rule-pt" style="background:rgba(229,57,53,.12);color:#ef9a9a">-2</div>
-              <div class="rule-txt"><strong>Wrong exact/pen</strong> — wrong winner predicted</div>
+              <div class="rule-txt"><strong>Wrong winner</strong> — exact or pen prediction, wrong team</div>
             </div>
             <div class="rule">
               <div class="rule-pt" style="background:rgba(229,57,53,.2);color:#ef5350">-5</div>
-              <div class="rule-txt"><strong>Wrong winner pick</strong> — wrong team selected</div>
+              <div class="rule-txt"><strong>Wrong winner pick</strong> — pick winner type, wrong team</div>
             </div>
           </div>
         </div>
@@ -1171,7 +1175,7 @@ function ptsKO(pred,result){
     if(ph===rh&&pa===ra)return 8;
     const predWin=ph>pa?'h':'a';
     if(predWin!==resWin)return -2;
-    return(ph-pa)===(rh-ra)?4:3;
+    return(ph-pa)===(rh-ra)?4:0;
   }
   if(pred.type==='winner')return pred.win===resWinFinal?3:-5;
   if(pred.type==='penalties'){
