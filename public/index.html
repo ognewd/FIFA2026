@@ -180,6 +180,7 @@ input:focus{outline:none;border-color:var(--accent)}
 .s-up{background:var(--surface2);color:var(--dim)}
 .s-today{background:rgba(229,57,53,.2);color:var(--red)}
 .s-ft{background:rgba(0,200,83,.12);color:var(--green)}
+.s-nores{background:rgba(217,119,6,.15);color:#d97706;border:1px solid rgba(217,119,6,.25)}
 .m-teams{display:flex;align-items:center;gap:8px}
 .m-team{flex:1;font-size:13px;font-weight:700}
 .m-team.away{text-align:right}
@@ -1508,10 +1509,11 @@ function renderKOMItem(m){
       ${mkChipKO(p)}${ptsEl}
     </div>`;
   }).join('')}</div>`;
+  const koSt=r?{cls:'s-ft',txt:'FT ✓'}:st.cls==='s-today'?{cls:'s-today',txt:'TODAY'}:{cls:'s-nores',txt:'No result'};
   return`<div class="m-item" onclick="openMo('${m.id}')">
     <div class="m-top">
       <span class="m-date">${fmtDate(m.d)}${m.t?' · '+m.t:''} · ${m.v||'TBD'}</span>
-      <span class="m-status ${st.cls}">${st.txt}</span>
+      <span class="m-status ${koSt.cls}">${koSt.txt}</span>
     </div>
     <div class="m-teams">
       <div class="m-team">${fh} ${th}</div>
