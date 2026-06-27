@@ -1512,7 +1512,9 @@ function renderKOMItem(m){
     </div>`;
   }).join('')}</div>`;
   const koSt=r?{cls:'s-ft',txt:'FT ✓'}:st.cls==='s-today'?{cls:'s-today',txt:'TODAY'}:{cls:'s-nores',txt:'No result'};
-  const noresCls=(!r&&S.user==='dima')?'nores':'';
+  const myPred=S.preds[S.user]?.[m.id];
+  const matchLocked=!!r||matchStarted(m);
+  const noresCls=(!myPred&&!matchLocked&&!pending)?'nores':'';
   return`<div class="m-item ${noresCls}" onclick="openMo('${m.id}')">
     <div class="m-top">
       <span class="m-date">${fmtDate(m.d)}${m.t?' · '+m.t:''} · ${m.v||'TBD'}</span>
