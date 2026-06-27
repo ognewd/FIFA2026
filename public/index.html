@@ -961,6 +961,8 @@ const QUALIFIED = {
   'Canada':'Canada','Ivory Coast':'Ivory Coast','Mexico':'Mexico',
   'USA':'USA','Bosnia & Herz.':'Bosnia & Herz.','Switzerland':'Switzerland',
   'Argentina':'Argentina','Australia':'Australia',
+  'France':'France','Sweden':'Sweden','Paraguay':'Paraguay','Norway':'Norway',
+  'Belgium':'Belgium','Spain':'Spain','Egypt':'Egypt','Cape Verde':'Cape Verde',
 };
 function qs(slot){ return QUALIFIED[slot]||slot; }
 
@@ -973,6 +975,10 @@ const TEAM_CC = {
   'France':'fr','Senegal':'sn','Iraq':'iq','Norway':'no',
   'Algeria':'dz','Austria':'at','Jordan':'jo',
   'Portugal':'pt','DR Congo':'cd','Uzbekistan':'uz','Colombia':'co',
+  'Belgium':'be','Spain':'es','Egypt':'eg','Sweden':'se','Cape Verde':'cv',
+  'England':'gb-eng','Croatia':'hr','Ghana':'gh','Panama':'pa',
+  'Uruguay':'uy','Saudi Arabia':'sa','Iran':'ir','New Zealand':'nz',
+  'Ecuador':'ec','Curaçao':'cw','Tunisia':'tn',
 };
 function bf(team){
   const cc=TEAM_CC[team];
@@ -1265,7 +1271,7 @@ function renderDash(){
         const btnSaved=hasPred&&!isDirty;
         return`<div class="up-match">
           <div class="up-teams">
-            ${fl(m.h)} ${m.h} <span style="color:var(--dim);font-weight:400">vs</span> ${m.a} ${fl(m.a)}
+            ${bf(m.h)} ${m.h} <span style="color:var(--dim);font-weight:400">vs</span> ${m.a} ${bf(m.a)}
             <span class="up-venue">Grp ${m.grp} · ${m.v}${m.t?' · '+m.t+' CET':''}</span>
           </div>
           <div class="up-inputs">
@@ -1422,9 +1428,9 @@ function renderMItem(m,g){
       <span class="m-status ${st.cls}">${st.txt}</span>
     </div>
     <div class="m-teams">
-      <div class="m-team">${fl(m.h)} ${m.h}</div>
+      <div class="m-team">${bf(m.h)} ${m.h}</div>
       ${scoreHtml}
-      <div class="m-team away">${m.a} ${fl(m.a)}</div>
+      <div class="m-team away">${m.a} ${bf(m.a)}</div>
     </div>
     ${predRow}
   </div>`;
@@ -1438,7 +1444,7 @@ function renderKOMItem(m){
   const st=getStatus(m);
   const isFinished=!!r;
   const th=qs(m.h),ta=qs(m.a);
-  const fh=fl(m.h)||'',fa=fl(m.a)||'';
+  const fh=bf(m.h),fa=bf(m.a);
   const scoreHtml=r
     ?`<div class="m-score"><div class="sn">${r.h}</div><span class="sep">–</span><div class="sn">${r.a}</div>${r.pen?`<span style="font-size:9px;color:var(--dim);margin-left:2px">P</span>`:''}</div>`
     :`<div class="m-score"><div class="sn" style="color:var(--dim)">?</div><span class="sep">–</span><div class="sn" style="color:var(--dim)">?</div></div>`;
@@ -1623,7 +1629,7 @@ function renderLB(){
       return`<td>${predStr} ${ptsStr}</td>`;
     }).join('');
     return`<tr>
-      <td>${fl(m.h)} ${m.h} vs ${m.a} ${fl(m.a)}<br>
+      <td>${bf(m.h)} ${m.h} vs ${m.a} ${bf(m.a)}<br>
           <small style="color:var(--dim)">Grp ${m.grp} · ${fmtDate(m.d)}</small></td>
       <td><strong>${r.h}–${r.a}</strong></td>
       ${userCells}
@@ -1712,11 +1718,11 @@ function openMo(id){
   const isPend=isKO&&isPending(m);
 
   document.getElementById('mo-sub').textContent=`${fmtDate(m.d)}${m.t?' · '+m.t:''} · ${m.v||'TBD'}`;
-  document.getElementById('mo-home').textContent=`${fl(m.h)||''} ${qs(m.h)}`;
-  document.getElementById('mo-away').textContent=`${qs(m.a)} ${fl(m.a)||''}`;
+  document.getElementById('mo-home').innerHTML=`${bf(m.h)} ${qs(m.h)}`;
+  document.getElementById('mo-away').innerHTML=`${qs(m.a)} ${bf(m.a)}`;
 
   // Set team labels in score inputs and winner buttons
-  const th=qs(m.h),ta=qs(m.a),fh=fl(m.h)||'',fa=fl(m.a)||'';
+  const th=qs(m.h),ta=qs(m.a),fh=bf(m.h),fa=bf(m.a);
   [['ko-lbl-h',th],['ko-lbl-a',ta],['grp-lbl-h',th],['grp-lbl-a',ta],
    ['ko-win-h-flag',fh],['ko-win-h-name',th],['ko-win-a-flag',fa],['ko-win-a-name',ta],
    ['ko-pen-h-flag',fh],['ko-pen-h-name',th],['ko-pen-a-flag',fa],['ko-pen-a-name',ta],
