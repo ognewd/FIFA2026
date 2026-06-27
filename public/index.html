@@ -356,6 +356,7 @@ input:focus{outline:none;border-color:var(--accent)}
 .mo-pred-pts.unk{color:#ccc;font-size:14px;font-weight:400}
 /* divider used in res-block only */
 .mo-divider{height:1px;background:#F0F0F0;margin:20px 0}
+.m-pending{font-size:12px;color:var(--dim);padding:8px 2px;margin-top:6px}
 /* override chip rows when inside a themed card (not modal) */
 .m-item .mo-pred-row2{border-bottom-color:var(--border)}
 .m-item .mo-pred-name{color:var(--text)}
@@ -905,21 +906,21 @@ const KO = {
   // Right half: M76→M78→M91, M79→M80→M92, M86→M88→M95, M85→M87→M96 → M99→M100→M102
   r32:{title:'Round of 32',matches:[
     {id:'M73',h:'South Africa',  a:'Canada',        d:'2026-06-28',t:'21:00',v:'Kansas City'},
-    {id:'M74',h:'Germany',       a:'3ABCDF',        d:'2026-06-29',t:'21:00',v:'Dallas'},
-    {id:'M76',h:'Brazil',        a:'Japan',         d:'2026-06-29',t:'23:00',v:'New York'},
-    {id:'M77',h:'1I',            a:'3CDFGH',        d:'2026-06-30',t:'19:00',v:'Los Angeles'},
-    {id:'M75',h:'Netherlands',   a:'Morocco',       d:'2026-06-30',t:'21:00',v:'Miami'},
-    {id:'M78',h:'Ivory Coast',   a:'2I',            d:'2026-06-30',t:'23:00',v:'Philadelphia'},
-    {id:'M82',h:'1G',            a:'3AEHIJ',        d:'2026-07-01',t:'19:00',v:'Seattle'},
-    {id:'M79',h:'Mexico',        a:'3CEFHI',        d:'2026-07-01',t:'21:00',v:'Mexico City'},
-    {id:'M80',h:'1L',            a:'3EHIJK',        d:'2026-07-01',t:'23:00',v:'San Francisco'},
-    {id:'M84',h:'1H',            a:'2J',            d:'2026-07-02',t:'21:00',v:'Atlanta'},
-    {id:'M81',h:'USA',           a:'Bosnia & Herz.',d:'2026-07-02',t:'23:00',v:'Boston'},
-    {id:'M83',h:'2K',            a:'2L',            d:'2026-07-03',t:'19:00',v:'Guadalajara'},
-    {id:'M88',h:'Australia',     a:'2G',            d:'2026-07-03',t:'21:00',v:'Vancouver'},
-    {id:'M85',h:'Switzerland',   a:'3EFGIJ',        d:'2026-07-03',t:'23:00',v:'Kansas City'},
-    {id:'M86',h:'Argentina',     a:'2H',            d:'2026-07-04',t:'21:00',v:'Dallas'},
-    {id:'M87',h:'1K',            a:'3DEIJL',        d:'2026-07-04',t:'23:00',v:'Los Angeles'}
+    {id:'M76',h:'Brazil',        a:'Japan',         d:'2026-06-29',t:'19:00',v:'New York'},
+    {id:'M74',h:'Germany',       a:'Paraguay',      d:'2026-06-29',t:'22:30',v:'Dallas'},
+    {id:'M78',h:'Ivory Coast',   a:'Norway',        d:'2026-06-30',t:'19:00',v:'Philadelphia'},
+    {id:'M75',h:'Netherlands',   a:'Morocco',       d:'2026-06-30',t:'03:00',v:'Miami'},
+    {id:'M77',h:'France',        a:'Sweden',        d:'2026-06-30',t:'23:00',v:'Los Angeles'},
+    {id:'M80',h:'1L',            a:'3EHIJK',        d:'2026-07-01',t:'18:00',v:'San Francisco'},
+    {id:'M82',h:'Belgium',       a:'3AEHIJ',        d:'2026-07-01',t:'22:00',v:'Seattle'},
+    {id:'M79',h:'Mexico',        a:'3CEFHI',        d:'2026-07-01',t:'03:00',v:'Mexico City'},
+    {id:'M84',h:'Spain',         a:'2J',            d:'2026-07-02',t:'21:00',v:'Atlanta'},
+    {id:'M81',h:'USA',           a:'Bosnia & Herz.',d:'2026-07-02',t:'02:00',v:'Boston'},
+    {id:'M88',h:'Australia',     a:'Egypt',         d:'2026-07-03',t:'20:00',v:'Vancouver'},
+    {id:'M83',h:'2K',            a:'2L',            d:'2026-07-03',t:'01:00',v:'Guadalajara'},
+    {id:'M85',h:'Switzerland',   a:'3EFGIJ',        d:'2026-07-03',t:'05:00',v:'Kansas City'},
+    {id:'M86',h:'Argentina',     a:'Cape Verde',    d:'2026-07-04',t:'00:00',v:'Dallas'},
+    {id:'M87',h:'1K',            a:'3DEIJL',        d:'2026-07-04',t:'03:30',v:'Los Angeles'}
   ]},
   r16:{title:'Round of 16',matches:[
     {id:'M89',h:'W M74',a:'W M77',d:'2026-07-04',v:'TBD'},
@@ -1221,6 +1222,8 @@ function next3Days(){
   return days;
 }
 
+function isPending(m){return /^\d/.test(m.h)||/^\d/.test(m.a);}
+
 function matchStarted(m){
   const cetNow=new Date(Date.now()+2*3600*1000);
   const cetDate=cetNow.toISOString().slice(0,10);
@@ -1446,7 +1449,10 @@ function renderKOMItem(m){
     if(p.type==='penalties')return`<span class="mo-pred-chip chip-pen"><span class="mo-pred-chip-val">${p.pen==='h'?fh:fa} ${p.pen==='h'?th:ta}</span><span class="mo-pred-chip-lbl">pen</span></span>`;
     return`<span class="mo-pred-chip chip-none"><span class="mo-pred-chip-val">—</span></span>`;
   };
-  const predRow=`<div class="mo-pred-list" style="margin-top:8px">${Object.keys(USERS).map(u=>{
+  const pending=isPending(m);
+  const predRow=pending
+    ?`<div class="m-pending">⏳ Awaiting participants</div>`
+    :`<div class="mo-pred-list" style="margin-top:8px">${Object.keys(USERS).map(u=>{
     if(!isFinished&&u!==S.user)return'';
     const p=S.preds[u]?.[m.id];
     const isMe=u===S.user;
@@ -1703,6 +1709,7 @@ function openMo(id){
   S.moId=id;
   const isKO=!!KO_MAP[id];
   const isAdmin=S.user==='dima';
+  const isPend=isKO&&isPending(m);
 
   document.getElementById('mo-sub').textContent=`${fmtDate(m.d)}${m.t?' · '+m.t:''} · ${m.v||'TBD'}`;
   document.getElementById('mo-home').textContent=`${fl(m.h)||''} ${qs(m.h)}`;
@@ -1717,9 +1724,9 @@ function openMo(id){
   ].forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=val;});
 
   // Toggle group vs KO prediction UI
-  document.getElementById('grp-pred-row').style.display=isKO?'none':'block';
-  document.getElementById('ko-pred-block').style.display=isKO?'block':'none';
-  document.getElementById('ko-res-pen-row').style.display=(isKO&&isAdmin)?'block':'none';
+  document.getElementById('grp-pred-row').style.display=(!isKO&&!isPend)?'block':'none';
+  document.getElementById('ko-pred-block').style.display=(isKO&&!isPend)?'block':'none';
+  document.getElementById('ko-res-pen-row').style.display=(isKO&&isAdmin&&!isPend)?'block':'none';
 
   const r=S.results[id];
   const predLocked=!!r||matchStarted(m);
@@ -1809,9 +1816,18 @@ function openMo(id){
   }
   document.getElementById('mo-preds').innerHTML=predsHtml;
 
+  // Pending message
+  if(isPend){
+    document.getElementById('mo-preds').innerHTML=
+      `<div style="text-align:center;color:var(--dim);font-size:13px;padding:16px 0">⏳ Awaiting participants</div>`;
+  }
+
   // Save button state
   const saveBtn=document.getElementById('mo-save-btn');
-  if(predLocked){
+  if(isPend){
+    saveBtn.textContent='Awaiting participants';
+    saveBtn.disabled=true;
+  } else if(predLocked){
     saveBtn.textContent='Match Locked 🔒';
     saveBtn.disabled=true;
   } else {
