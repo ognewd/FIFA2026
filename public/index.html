@@ -1751,7 +1751,7 @@ function openMo(id){
    ['ko-win-h-flag',fh],['ko-win-h-name',th],['ko-win-a-flag',fa],['ko-win-a-name',ta],
    ['ko-pen-h-flag',fh],['ko-pen-h-name',th],['ko-pen-a-flag',fa],['ko-pen-a-name',ta],
    ['ko-rpen-h-flag',fh],['ko-rpen-h-name',th],['ko-rpen-a-flag',fa],['ko-rpen-a-name',ta]
-  ].forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=val;});
+  ].forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.innerHTML=val;});
 
   // Toggle group vs KO prediction UI
   document.getElementById('grp-pred-row').style.display=(!isKO&&!isPend)?'block':'none';
