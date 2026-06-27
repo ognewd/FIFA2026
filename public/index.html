@@ -1876,6 +1876,9 @@ function openMo(id){
   if(isPend){
     saveBtn.textContent='Awaiting participants';
     saveBtn.disabled=true;
+  } else if(predLocked&&isAdmin){
+    saveBtn.textContent='Save Result';
+    saveBtn.disabled=false;
   } else if(predLocked){
     saveBtn.textContent='Match Locked 🔒';
     saveBtn.disabled=true;
