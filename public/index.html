@@ -1523,7 +1523,7 @@ function renderKOMItem(m){
   const myPred=S.preds[S.user]?.[m.id];
   const matchLocked=!!r||matchStarted(m);
   const noresCls=pending||matchLocked?'':(myPred?'haspred':'nores');
-  return`<div class="m-item ${noresCls}" onclick="openMo('${m.id}')">
+  return`<div class="m-item ${noresCls}" ${pending?'style="cursor:default;opacity:.65"':`onclick="openMo('${m.id}')"`}>
     <div class="m-top">
       <span class="m-date">${fmtDate(m.d)}${m.t?' · '+m.t:''} · ${m.v||'TBD'}</span>
       <span class="m-status ${koSt.cls}">${koSt.txt}</span>
