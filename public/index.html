@@ -357,6 +357,9 @@ input:focus{outline:none;border-color:var(--accent)}
 /* divider used in res-block only */
 .mo-divider{height:1px;background:#F0F0F0;margin:20px 0}
 .m-pending{font-size:12px;color:var(--dim);padding:8px 2px;margin-top:6px}
+.m-practice{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.07em;padding:3px 9px;border-radius:20px;margin:6px 0 2px;
+  background:rgba(217,119,6,.15);color:#d97706;border:1px solid rgba(217,119,6,.3)}
 /* override chip rows when inside a themed card (not modal) */
 .m-item .mo-pred-row2{border-bottom-color:var(--border)}
 .m-item .mo-pred-name{color:var(--text)}
@@ -1490,7 +1493,7 @@ function renderKOMItem(m){
   const isPractice=PRACTICE.has(m.id);
   const predRow=pending
     ?`<div class="m-pending">⏳ Awaiting participants</div>`
-    :`${isPractice?`<div class="m-pending">🏋️ Practice match — points not counted</div>`:''}
+    :`${isPractice?`<div><span class="m-practice">Practice · No points</span></div>`:''}
     <div class="mo-pred-list" style="margin-top:8px">${Object.keys(USERS).map(u=>{
     if(!isFinished&&u!==S.user)return'';
     const p=S.preds[u]?.[m.id];
@@ -1854,7 +1857,7 @@ function openMo(id){
     }
   }
   const practiceNote=PRACTICE.has(id)
-    ?`<div style="text-align:center;color:var(--dim);font-size:12px;padding:8px 0 4px">🏋️ Practice match — points not counted</div>`:'';
+    ?`<div style="text-align:center;padding:8px 0 4px"><span class="m-practice">Practice · No points</span></div>`:'';
   document.getElementById('mo-preds').innerHTML=practiceNote+predsHtml;
 
   // Pending message
