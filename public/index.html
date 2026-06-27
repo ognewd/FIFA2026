@@ -535,14 +535,15 @@ input:focus{outline:none;border-color:var(--accent)}
         </div>
         <div class="dash-card">
           <h3>How Points Work</h3>
-          <div class="rule-list">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);margin-bottom:8px">Group Stage</div>
+          <div class="rule-list" style="margin-bottom:16px">
             <div class="rule">
               <div class="rule-pt" style="background:rgba(0,200,83,.2);color:var(--green)">5</div>
               <div class="rule-txt"><strong>Exact score</strong> — predicted 2-1, result 2-1</div>
             </div>
             <div class="rule">
               <div class="rule-pt" style="background:rgba(33,150,243,.2);color:#64b5f6">3</div>
-              <div class="rule-txt"><strong>Correct result + goal diff</strong> — right winner, same margin (3-1 → 4-2)</div>
+              <div class="rule-txt"><strong>Correct result + goal diff</strong> — right winner, same margin</div>
             </div>
             <div class="rule">
               <div class="rule-pt" style="background:rgba(255,143,0,.2);color:#ffb74d">2</div>
@@ -550,7 +551,30 @@ input:focus{outline:none;border-color:var(--accent)}
             </div>
             <div class="rule">
               <div class="rule-pt" style="background:rgba(229,57,53,.12);color:#ef9a9a">0</div>
-              <div class="rule-txt"><strong>Wrong prediction</strong> — picked wrong winner</div>
+              <div class="rule-txt"><strong>Wrong prediction</strong></div>
+            </div>
+          </div>
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);margin-bottom:8px">Play Off</div>
+          <div class="rule-list">
+            <div class="rule">
+              <div class="rule-pt" style="background:rgba(255,215,0,.2);color:#ffd700">+8</div>
+              <div class="rule-txt"><strong>Exact score</strong> — correct score in 90 min</div>
+            </div>
+            <div class="rule">
+              <div class="rule-pt" style="background:rgba(0,200,83,.2);color:var(--green)">+3</div>
+              <div class="rule-txt"><strong>Pick winner</strong> — correct team wins</div>
+            </div>
+            <div class="rule">
+              <div class="rule-pt" style="background:rgba(156,39,176,.2);color:#ce93d8">+6</div>
+              <div class="rule-txt"><strong>Penalties</strong> — correct penalty winner</div>
+            </div>
+            <div class="rule">
+              <div class="rule-pt" style="background:rgba(229,57,53,.12);color:#ef9a9a">-2</div>
+              <div class="rule-txt"><strong>Wrong exact/pen</strong> — wrong winner predicted</div>
+            </div>
+            <div class="rule">
+              <div class="rule-pt" style="background:rgba(229,57,53,.2);color:#ef5350">-5</div>
+              <div class="rule-txt"><strong>Wrong winner pick</strong> — wrong team selected</div>
             </div>
           </div>
         </div>
