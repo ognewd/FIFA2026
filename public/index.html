@@ -1415,7 +1415,7 @@ function renderMItem(m,g){
 
   return`<div class="m-item" onclick="openMo('${m.id}')">
     <div class="m-top">
-      <span class="m-date">Group ${g} · ${fmtDate(m.d)} · ${m.v}</span>
+      <span class="m-date">Group ${g} · ${fmtDate(m.d)}${m.t?' · '+m.t:''} · ${m.v}</span>
       <span class="m-status ${st.cls}">${st.txt}</span>
     </div>
     <div class="m-teams">
@@ -1462,7 +1462,7 @@ function renderKOMItem(m){
   }).join('')}</div>`;
   return`<div class="m-item" onclick="openMo('${m.id}')">
     <div class="m-top">
-      <span class="m-date">${fmtDate(m.d)} · ${m.v||'TBD'}</span>
+      <span class="m-date">${fmtDate(m.d)}${m.t?' · '+m.t:''} · ${m.v||'TBD'}</span>
       <span class="m-status ${st.cls}">${st.txt}</span>
     </div>
     <div class="m-teams">
@@ -1704,7 +1704,7 @@ function openMo(id){
   const isKO=!!KO_MAP[id];
   const isAdmin=S.user==='dima';
 
-  document.getElementById('mo-sub').textContent=`${fmtDate(m.d)} · ${m.v||'TBD'}`;
+  document.getElementById('mo-sub').textContent=`${fmtDate(m.d)}${m.t?' · '+m.t:''} · ${m.v||'TBD'}`;
   document.getElementById('mo-home').textContent=`${fl(m.h)||''} ${qs(m.h)}`;
   document.getElementById('mo-away').textContent=`${qs(m.a)} ${fl(m.a)||''}`;
 
