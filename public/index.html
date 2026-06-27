@@ -173,6 +173,8 @@ input:focus{outline:none;border-color:var(--accent)}
 .m-item{padding:9px;border-radius:8px;background:var(--surface2);margin-bottom:7px;
   cursor:pointer;transition:.15s;border:1px solid transparent}
 .m-item:hover{border-color:var(--accent)}
+.m-item.nores{border-color:rgba(220,38,38,.35)}
+.m-item.nores:hover{border-color:var(--red)}
 .m-item:last-child{margin-bottom:0}
 .m-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
 .m-date{font-size:10px;color:var(--dim)}
@@ -1510,7 +1512,8 @@ function renderKOMItem(m){
     </div>`;
   }).join('')}</div>`;
   const koSt=r?{cls:'s-ft',txt:'FT ✓'}:st.cls==='s-today'?{cls:'s-today',txt:'TODAY'}:{cls:'s-nores',txt:'No result'};
-  return`<div class="m-item" onclick="openMo('${m.id}')">
+  const noresCls=(!r&&S.user==='dima')?'nores':'';
+  return`<div class="m-item ${noresCls}" onclick="openMo('${m.id}')">
     <div class="m-top">
       <span class="m-date">${fmtDate(m.d)}${m.t?' · '+m.t:''} · ${m.v||'TBD'}</span>
       <span class="m-status ${koSt.cls}">${koSt.txt}</span>
