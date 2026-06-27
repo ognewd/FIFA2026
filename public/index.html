@@ -398,8 +398,16 @@ input:focus{outline:none;border-color:var(--accent)}
 .ko-type-btn:disabled{opacity:.4;cursor:default}
 .ktb-label{font-size:14px;font-weight:600;line-height:1}
 .ktb-pts{font-size:12px;opacity:.7;line-height:1}
-/* Risk warning */
-.ko-risk-warning{font-size:12px;color:#FF4444;min-height:16px;margin-bottom:12px;text-align:center}
+/* Outcomes breakdown */
+.ko-outcomes{background:#F8F9FB;border-radius:10px;padding:10px 12px;margin-bottom:12px;display:flex;flex-direction:column;gap:5px}
+.ko-out-row{display:flex;align-items:center;gap:8px;font-size:12px}
+.ko-out-pt{min-width:28px;text-align:center;font-weight:800;font-size:11px;padding:2px 5px;border-radius:5px}
+.ko-out-pt.pos8{background:rgba(255,215,0,.2);color:#b8860b}
+.ko-out-pt.pos4{background:rgba(33,150,243,.2);color:#1565c0}
+.ko-out-pt.pos3{background:rgba(22,163,74,.2);color:#15803d}
+.ko-out-pt.pos6{background:rgba(156,39,176,.2);color:#7b1fa2}
+.ko-out-pt.neg{background:rgba(220,38,38,.12);color:#dc2626}
+.ko-out-txt{color:#444;line-height:1.3}
 /* Winner / Penalties selector */
 .ko-win-row{display:flex;gap:8px;margin-bottom:8px;margin-top:4px}
 .ko-win-btn{flex:1;height:80px;border-radius:12px;cursor:pointer;border:none;
@@ -709,7 +717,7 @@ input:focus{outline:none;border-color:var(--accent)}
           <span class="ktb-pts">+6 pts</span>
         </button>
       </div>
-      <div class="ko-risk-warning" id="ko-risk-warning"></div>
+      <div id="ko-risk-warning"></div>
       <div id="ko-exact-in">
         <div class="ko-score-wrap">
           <div class="ko-score-col">
@@ -1699,9 +1707,19 @@ function findM(id){
 
 // ── KO modal helpers ──
 const KO_RISK={
-  exact:'Wrong winner costs -2 pts',
-  winner:'Wrong prediction costs -5 pts',
-  penalties:'Wrong prediction costs -2 pts'
+  exact:`<div class="ko-outcomes">
+    <div class="ko-out-row"><span class="ko-out-pt pos8">+8</span><span class="ko-out-txt">Exact score</span></div>
+    <div class="ko-out-row"><span class="ko-out-pt pos4">+4</span><span class="ko-out-txt">Right winner, same margin (2:1 → 3:2)</span></div>
+    <div class="ko-out-row"><span class="ko-out-pt neg">−2</span><span class="ko-out-txt">Wrong winner or different margin</span></div>
+  </div>`,
+  winner:`<div class="ko-outcomes">
+    <div class="ko-out-row"><span class="ko-out-pt pos3">+3</span><span class="ko-out-txt">Correct winner</span></div>
+    <div class="ko-out-row"><span class="ko-out-pt neg">−5</span><span class="ko-out-txt">Wrong winner</span></div>
+  </div>`,
+  penalties:`<div class="ko-outcomes">
+    <div class="ko-out-row"><span class="ko-out-pt pos6">+6</span><span class="ko-out-txt">Match goes to penalties + correct winner</span></div>
+    <div class="ko-out-row"><span class="ko-out-pt neg">−2</span><span class="ko-out-txt">Wrong winner or match doesn't go to penalties</span></div>
+  </div>`
 };
 function checkKoDraw(){
   const ph=document.getElementById('ko-ph');
@@ -1711,7 +1729,7 @@ function checkKoDraw(){
   ph.style.borderColor=isDraw?red:'';
   pa.style.borderColor=isDraw?red:'';
   const rw=document.getElementById('ko-risk-warning');
-  if(rw&&_koType==='exact')rw.textContent=isDraw?'Draw not allowed in knockout':'Wrong winner costs -2 pts';
+  if(rw&&_koType==='exact')rw.innerHTML=isDraw?'<div style="color:#dc2626;font-size:12px;text-align:center;margin-bottom:12px">Draw not allowed in knockout</div>':KO_RISK.exact;
   const btn=document.getElementById('mo-save-btn');
   if(btn&&!btn.textContent.includes('Locked'))btn.disabled=isDraw;
 }
@@ -1734,7 +1752,7 @@ function setKoType(type){
   document.getElementById('ko-pen-in').style.display=type==='penalties'?'block':'none';
   ['ko-ph','ko-pa'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.borderColor='';});
   const rw=document.getElementById('ko-risk-warning');
-  if(rw)rw.textContent=KO_RISK[type]||'';
+  if(rw)rw.innerHTML=KO_RISK[type]||'';
   _updateSaveBtn();
 }
 function setKoWin(w){
