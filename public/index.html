@@ -1534,10 +1534,13 @@ function renderKOMItem(m){
   const myPred=S.preds[S.user]?.[m.id];
   const matchLocked=!!r||matchStarted(m);
   const noresCls=pending||matchLocked?'':(myPred?'haspred':'nores');
+  const total=Object.keys(USERS).length;
+  const predCount=Object.values(S.preds).filter(p=>p[m.id]).length;
+  const counter=S.user==='dima'&&!pending?`<span style="font-size:10px;font-weight:700;color:${predCount===total?'var(--green)':'var(--dim)'};background:var(--surface);border:1px solid var(--border);padding:1px 7px;border-radius:10px">${predCount}/${total}</span>`:'';
   return`<div class="m-item ${noresCls}" ${pending?'style="cursor:default;opacity:.65"':`onclick="openMo('${m.id}')"`}>
     <div class="m-top">
       <span class="m-date">${fmtDate(m.d)}${m.t?' · '+m.t:''} · ${m.v||'TBD'}</span>
-      <span class="m-status ${koSt.cls}">${koSt.txt}</span>
+      <div style="display:flex;align-items:center;gap:5px">${counter}<span class="m-status ${koSt.cls}">${koSt.txt}</span></div>
     </div>
     <div class="m-teams">
       <div class="m-team">${fh} ${th}</div>
