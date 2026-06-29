@@ -957,22 +957,22 @@ const KO = {
   // Left half: M74→M77→M89, M73→M75→M90, M83→M84→M93, M81→M82→M94 → M97→M98→M101
   // Right half: M76→M78→M91, M79→M80→M92, M86→M88→M95, M85→M87→M96 → M99→M100→M102
   r32:{title:'Round of 32',matches:[
-    {id:'M73',h:'South Africa',  a:'Canada',        d:'2026-06-28',t:'21:00',v:'Kansas City'},
-    {id:'M76',h:'Brazil',        a:'Japan',         d:'2026-06-29',t:'19:00',v:'New York'},
-    {id:'M74',h:'Germany',       a:'Paraguay',      d:'2026-06-29',t:'22:30',v:'Dallas'},
-    {id:'M78',h:'Ivory Coast',   a:'Norway',        d:'2026-06-30',t:'19:00',v:'Philadelphia'},
-    {id:'M75',h:'Netherlands',   a:'Morocco',       d:'2026-06-30',t:'03:00',v:'Miami'},
-    {id:'M77',h:'France',        a:'Sweden',        d:'2026-06-30',t:'23:00',v:'Los Angeles'},
-    {id:'M80',h:'1L',            a:'3EHIJK',        d:'2026-07-01',t:'18:00',v:'San Francisco'},
-    {id:'M82',h:'Belgium',       a:'3AEHIJ',        d:'2026-07-01',t:'22:00',v:'Seattle'},
-    {id:'M79',h:'Mexico',        a:'3CEFHI',        d:'2026-07-01',t:'03:00',v:'Mexico City'},
-    {id:'M84',h:'Spain',         a:'2J',            d:'2026-07-02',t:'21:00',v:'Atlanta'},
-    {id:'M81',h:'USA',           a:'Bosnia & Herz.',d:'2026-07-02',t:'02:00',v:'Boston'},
-    {id:'M88',h:'Australia',     a:'Egypt',         d:'2026-07-03',t:'20:00',v:'Vancouver'},
-    {id:'M83',h:'2K',            a:'2L',            d:'2026-07-03',t:'01:00',v:'Guadalajara'},
-    {id:'M85',h:'Switzerland',   a:'3EFGIJ',        d:'2026-07-03',t:'05:00',v:'Kansas City'},
-    {id:'M86',h:'Argentina',     a:'Cape Verde',    d:'2026-07-04',t:'00:00',v:'Dallas'},
-    {id:'M87',h:'1K',            a:'3DEIJL',        d:'2026-07-04',t:'03:30',v:'Los Angeles'}
+    {id:'M73',h:'South Africa',  a:'Canada',        d:'2026-06-28',t:'21:00',v:'Los Angeles'},
+    {id:'M76',h:'Brazil',        a:'Japan',         d:'2026-06-29',t:'19:00',v:'Houston'},
+    {id:'M74',h:'Germany',       a:'Paraguay',      d:'2026-06-29',t:'22:30',v:'Foxborough'},
+    {id:'M78',h:'Ivory Coast',   a:'Norway',        d:'2026-06-30',t:'19:00',v:'Dallas'},
+    {id:'M75',h:'Netherlands',   a:'Morocco',       d:'2026-06-30',t:'03:00',v:'Monterrey'},
+    {id:'M77',h:'France',        a:'Sweden',        d:'2026-06-30',t:'23:00',v:'New Jersey'},
+    {id:'M80',h:'England',       a:'DR Congo',      d:'2026-07-01',t:'18:00',v:'Atlanta'},
+    {id:'M82',h:'Belgium',       a:'Senegal',       d:'2026-07-01',t:'22:00',v:'Seattle'},
+    {id:'M79',h:'Mexico',        a:'Ecuador',       d:'2026-07-01',t:'03:00',v:'Mexico City'},
+    {id:'M84',h:'Spain',         a:'Austria',       d:'2026-07-02',t:'21:00',v:'Los Angeles'},
+    {id:'M81',h:'USA',           a:'Bosnia & Herz.',d:'2026-07-02',t:'02:00',v:'San Francisco'},
+    {id:'M88',h:'Australia',     a:'Egypt',         d:'2026-07-03',t:'20:00',v:'Dallas'},
+    {id:'M83',h:'Portugal',      a:'Croatia',       d:'2026-07-03',t:'01:00',v:'Toronto'},
+    {id:'M85',h:'Switzerland',   a:'Algeria',       d:'2026-07-03',t:'05:00',v:'Vancouver'},
+    {id:'M86',h:'Argentina',     a:'Cape Verde',    d:'2026-07-04',t:'00:00',v:'Miami'},
+    {id:'M87',h:'Colombia',      a:'Ghana',         d:'2026-07-04',t:'03:30',v:'Kansas City'}
   ]},
   r16:{title:'Round of 16',matches:[
     {id:'M89',h:'W M74',a:'W M77',d:'2026-07-04',v:'TBD'},
@@ -1015,6 +1015,9 @@ const QUALIFIED = {
   'Argentina':'Argentina','Australia':'Australia',
   'France':'France','Sweden':'Sweden','Paraguay':'Paraguay','Norway':'Norway',
   'Belgium':'Belgium','Spain':'Spain','Egypt':'Egypt','Cape Verde':'Cape Verde',
+  'England':'England','DR Congo':'DR Congo','Ecuador':'Ecuador','Senegal':'Senegal',
+  'Austria':'Austria','Portugal':'Portugal','Croatia':'Croatia','Algeria':'Algeria',
+  'Colombia':'Colombia','Ghana':'Ghana',
 };
 function qs(slot){ return QUALIFIED[slot]||slot; }
 
