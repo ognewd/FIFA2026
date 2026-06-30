@@ -1355,7 +1355,10 @@ function renderDash(){
 
   // R32 match grid
   const r32El=document.getElementById('d-r32');
-  if(r32El)r32El.innerHTML=KO.r32.matches.map(renderKOMItem).join('');
+  if(r32El){
+    const sorted=[...KO.r32.matches].sort((a,b)=>(a.d+'T'+(a.t||'00:00'))<(b.d+'T'+(b.t||'00:00'))?-1:1);
+    r32El.innerHTML=sorted.map(renderKOMItem).join('');
+  }
 }
 
 // ── Race to the trophy (dashboard standings) ──
