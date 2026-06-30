@@ -1174,9 +1174,8 @@ function ptsKO(pred,result){
 
   if(pred.type==='exact'){
     if(wentToPen){
-      // Match went to pens — exact pred counts as winner pick
-      const predWin=pred.h>pred.a?'h':'a';
-      return predWin===resWinFinal?3:-2;
+      // Exact score vs penalty draw — score prediction is always wrong → -2
+      return -2;
     }
     const ph=+pred.h,pa=+pred.a,rh=+result.h,ra=+result.a;
     if(ph===rh&&pa===ra)return 8;
@@ -1714,9 +1713,9 @@ function findM(id){
 // ── KO modal helpers ──
 const KO_RISK={
   exact:`<div class="ko-outcomes">
-    <div class="ko-out-row"><span class="ko-out-pt pos8">+8</span><span class="ko-out-txt">Exact score</span></div>
+    <div class="ko-out-row"><span class="ko-out-pt pos8">+8</span><span class="ko-out-txt">Exact score (reg. + extra time)</span></div>
     <div class="ko-out-row"><span class="ko-out-pt pos4">+4</span><span class="ko-out-txt">Right winner, same margin (2:1 → 3:2)</span></div>
-    <div class="ko-out-row"><span class="ko-out-pt neg">−2</span><span class="ko-out-txt">Wrong winner or different margin</span></div>
+    <div class="ko-out-row"><span class="ko-out-pt neg">−2</span><span class="ko-out-txt">Wrong winner, different margin, or match went to penalties</span></div>
   </div>`,
   winner:`<div class="ko-outcomes">
     <div class="ko-out-row"><span class="ko-out-pt pos3">+3</span><span class="ko-out-txt">Correct winner</span></div>
