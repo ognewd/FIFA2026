@@ -1844,6 +1844,7 @@ function openMo(id){
     const koInputs=['ko-ph','ko-pa'];
     koInputs.forEach(elId=>{const el=document.getElementById(elId);if(el){el.readOnly=predLocked;el.style.opacity=predLocked?'0.5':'1';}});
     document.querySelectorAll('.ko-type-btn,.ko-win-btn').forEach(b=>{b.disabled=predLocked;});
+    if(isAdmin)['ko-rpen-h','ko-rpen-a'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=false;});
   }
 
   // Result UI (shared for group + KO)
