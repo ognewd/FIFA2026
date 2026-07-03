@@ -975,14 +975,14 @@ const KO = {
     {id:'M87',h:'Colombia',      a:'Ghana',         d:'2026-07-04',t:'03:30',v:'Kansas City'}
   ]},
   r16:{title:'Round of 16',matches:[
-    {id:'M89',h:'W M74',a:'W M77',d:'2026-07-04',v:'TBD'},
-    {id:'M90',h:'W M73',a:'W M75',d:'2026-07-04',v:'TBD'},
-    {id:'M93',h:'W M83',a:'W M84',d:'2026-07-06',v:'TBD'},
-    {id:'M94',h:'W M81',a:'W M82',d:'2026-07-07',v:'TBD'},
-    {id:'M91',h:'W M76',a:'W M78',d:'2026-07-05',v:'TBD'},
-    {id:'M92',h:'W M79',a:'W M80',d:'2026-07-06',v:'TBD'},
-    {id:'M95',h:'W M86',a:'W M88',d:'2026-07-07',v:'TBD'},
-    {id:'M96',h:'W M85',a:'W M87',d:'2026-07-07',v:'TBD'}
+    {id:'M90',h:'Canada',      a:'Morocco',     d:'2026-07-04',t:'19:00',v:'TBD'},
+    {id:'M89',h:'Paraguay',    a:'France',      d:'2026-07-04',t:'23:00',v:'TBD'},
+    {id:'M91',h:'Brazil',      a:'Norway',      d:'2026-07-05',t:'22:00',v:'TBD'},
+    {id:'M92',h:'Mexico',      a:'England',     d:'2026-07-06',t:'02:00',v:'TBD'},
+    {id:'M93',h:'Portugal',    a:'Spain',       d:'2026-07-06',t:'21:00',v:'TBD'},
+    {id:'M94',h:'USA',         a:'Belgium',     d:'2026-07-07',t:'02:00',v:'TBD'},
+    {id:'M95',h:'TBD',         a:'TBD',         d:'2026-07-07',t:'18:00',v:'TBD'},
+    {id:'M96',h:'Switzerland', a:'TBD',         d:'2026-07-07',t:'22:00',v:'TBD'}
   ]},
   qf:{title:'Quarter-Finals',matches:[
     {id:'M97', h:'W M89',a:'W M90',d:'2026-07-09',v:'TBD'},
@@ -1283,7 +1283,7 @@ function next3Days(){
   return days;
 }
 
-function isPending(m){return /^\d/.test(m.h)||/^\d/.test(m.a);}
+function isPending(m){return /^\d/.test(m.h)||/^\d/.test(m.a)||m.h==='TBD'||m.a==='TBD';}
 
 function matchStarted(m){
   const cetNow=new Date(Date.now()+2*3600*1000);
