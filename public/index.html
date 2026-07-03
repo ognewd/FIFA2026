@@ -1013,7 +1013,8 @@ const KO = {
 
 // Quick lookup for knockout matches
 const KO_MAP = {};
-for(const rd of Object.values(KO)) rd.matches.forEach(m => KO_MAP[m.id]=m);
+for(const [rdKey,rd] of Object.entries(KO)) rd.matches.forEach(m=>{KO_MAP[m.id]=m;m._round=rdKey;});
+const PENALTY_ROUNDS=new Set(['r16','qf','sf','tp','fin']);
 
 // Known team names used directly as h/a in KO matches (show flag, no TBD style)
 const QUALIFIED = {
@@ -1215,12 +1216,12 @@ function userStats(uid){
     else wr++;
   });
   // Playoff (KO)
-  Object.values(KO).forEach(rd=>rd.matches.forEach(m=>{
+  Object.entries(KO).forEach(([rdKey,rd])=>rd.matches.forEach(m=>{
     if(PRACTICE.has(m.id))return;
     const r=S.results[m.id];
     if(!r)return;
     const p=S.preds[uid]?.[m.id];
-    if(!p)return;
+    if(!p){if(PENALTY_ROUNDS.has(rdKey)){tot-=5;wr++;}return;}
     const sc=ptsKO(p,r);
     if(sc===null)return;
     tot+=sc;
@@ -1516,6 +1517,7 @@ function renderKOMItem(m){
   const r=S.results[m.id];
   const st=getStatus(m);
   const isFinished=!!r;
+  const matchLocked=!!r||matchStarted(m);
   const th=qs(m.h),ta=qs(m.a);
   const fh=bf(m.h),fa=bf(m.a);
   const scoreHtml=r
@@ -1530,17 +1532,21 @@ function renderKOMItem(m){
   };
   const pending=isPending(m);
   const isPractice=PRACTICE.has(m.id);
+  const showAll=isFinished||(S.user==='dima'&&matchLocked);
   const predRow=pending
     ?`<div class="m-pending">⏳ Awaiting participants</div>`
     :`${isPractice?`<div><span class="m-practice">Practice · No points</span></div>`:''}
     <div class="mo-pred-list" style="margin-top:8px">${Object.keys(USERS).map(u=>{
-    if(!isFinished&&u!==S.user)return'';
+    if(!showAll&&u!==S.user)return'';
     const p=S.preds[u]?.[m.id];
     const isMe=u===S.user;
     const sc=r&&!isPractice?ptsKO(p,r):null;
+    const missPen=!p&&r&&!isPractice&&PENALTY_ROUNDS.has(m._round);
     const ptsEl=sc!==null
       ?`<span class="mo-pred-pts ${sc>=0?'pos':'neg'}">${sc>0?'+':''}${sc}</span>`
-      :`<span class="mo-pred-pts unk">—</span>`;
+      :missPen
+        ?`<span class="mo-pred-pts neg">−5</span>`
+        :`<span class="mo-pred-pts unk">—</span>`;
     return`<div class="mo-pred-row2">
       <div class="mo-pred-av c-${u}">${USERS[u].av}</div>
       <div class="mo-pred-name">${USERS[u].name}${isMe?'<span class="mo-pred-you">you</span>':''}</div>
@@ -1888,17 +1894,19 @@ function openMo(id){
     return`<span class="mo-pred-chip chip-none"><span class="mo-pred-chip-val">—</span></span>`;
   };
   let predsHtml='';
-  if(r){
+  const moShowAll=!!r||(isAdmin&&predLocked);
+  if(moShowAll){
     const ptsFn=isKO?ptsKO:pts;
     predsHtml=`<div class="mo-pred-list">${Object.keys(USERS).map(u=>{
       const op=S.preds[u]?.[id];
       const isMe=u===S.user;
-      const sc=op&&!PRACTICE.has(id)?ptsFn(op,r):null;
+      const sc=r&&op&&!PRACTICE.has(id)?ptsFn(op,r):null;
+      const missPen=!op&&r&&isKO&&!PRACTICE.has(id)&&PENALTY_ROUNDS.has(KO_MAP[id]?._round);
       return`<div class="mo-pred-row2">
         <div class="mo-pred-av c-${u}">${USERS[u].av}</div>
         <div class="mo-pred-name">${USERS[u].name}${isMe?'<span class="mo-pred-you">you</span>':''}</div>
         ${mkChip(op,isKO,fh,fa,th,ta)}
-        ${sc!==null?`<span class="mo-pred-pts ${sc>=0?'pos':'neg'}">${sc>0?'+':''}${sc}</span>`:`<span class="mo-pred-pts unk">—</span>`}
+        ${sc!==null?`<span class="mo-pred-pts ${sc>=0?'pos':'neg'}">${sc>0?'+':''}${sc}</span>`:missPen?`<span class="mo-pred-pts neg">−5</span>`:`<span class="mo-pred-pts unk">${r?'—':'?'}</span>`}
       </div>`;
     }).join('')}</div>`;
   } else {
