@@ -1870,8 +1870,8 @@ function openMo(id){
   }
 
   // Result UI (shared for group + KO)
-  document.getElementById('rh').value=r?r.h:'';
-  document.getElementById('ra').value=r?r.a:'';
+  document.getElementById('rh').value=r?r.h:(isAdmin&&predLocked?'0':'');
+  document.getElementById('ra').value=r?r.a:(isAdmin&&predLocked?'0':'');
   document.getElementById('res-chk-row').style.display=isAdmin?'flex':'none';
   document.getElementById('res-chk').checked=isAdmin&&(!!r||predLocked);
   document.getElementById('res-block').style.display=(isAdmin&&(!!r||predLocked))?'block':'none';
