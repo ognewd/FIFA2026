@@ -1873,8 +1873,8 @@ function openMo(id){
   document.getElementById('rh').value=r?r.h:'';
   document.getElementById('ra').value=r?r.a:'';
   document.getElementById('res-chk-row').style.display=isAdmin?'flex':'none';
-  document.getElementById('res-chk').checked=!!r&&isAdmin;
-  document.getElementById('res-block').style.display=(r&&isAdmin)?'block':'none';
+  document.getElementById('res-chk').checked=isAdmin&&(!!r||predLocked);
+  document.getElementById('res-block').style.display=(isAdmin&&(!!r||predLocked))?'block':'none';
   // KO penalties result
   if(isKO&&isAdmin){
     document.getElementById('ko-pen-chk').checked=!!(r&&r.pen);
