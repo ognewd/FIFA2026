@@ -624,6 +624,14 @@ input:focus{outline:none;border-color:var(--accent)}
         </div>
         <div class="matches-grid" id="d-r16"></div>
       </div>
+      <div class="dash-card" style="margin-bottom:0;padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+          <h3 style="margin:0;white-space:nowrap">Play Off — Quarter-Finals</h3>
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+        </div>
+        <div class="matches-grid" id="d-qf"></div>
+      </div>
     </div>
 
     <!-- GROUPS -->
@@ -994,10 +1002,10 @@ const KO = {
     {id:'M96',h:'Switzerland', a:'Colombia',    d:'2026-07-07',t:'22:00',v:'TBD'}
   ]},
   qf:{title:'Quarter-Finals',matches:[
-    {id:'M97', h:'W M89',a:'W M90',d:'2026-07-09',v:'TBD'},
-    {id:'M98', h:'W M93',a:'W M94',d:'2026-07-10',v:'TBD'},
-    {id:'M99', h:'W M91',a:'W M92',d:'2026-07-11',v:'TBD'},
-    {id:'M100',h:'W M95',a:'W M96',d:'2026-07-12',v:'TBD'}
+    {id:'M97', h:'France',  a:'Morocco', d:'2026-07-09',t:'22:00',v:'TBD'},
+    {id:'M98', h:'W M93',  a:'W M94',   d:'2026-07-10',t:'21:00',v:'TBD'},
+    {id:'M99', h:'Norway',  a:'England', d:'2026-07-11',t:'23:00',v:'TBD'},
+    {id:'M100',h:'W M95',  a:'W M96',   d:'2026-07-12',t:'03:00',v:'TBD'}
   ]},
   sf:{title:'Semi-Finals',matches:[
     {id:'M101',h:'W M97', a:'W M98', d:'2026-07-14',v:'TBD'},
@@ -1374,6 +1382,12 @@ function renderDash(){
   if(r16El){
     const sorted=[...KO.r16.matches].sort((a,b)=>(a.d+'T'+(a.t||'00:00'))<(b.d+'T'+(b.t||'00:00'))?-1:1);
     r16El.innerHTML=sorted.map(renderKOMItem).join('');
+  }
+  // QF match grid
+  const qfEl=document.getElementById('d-qf');
+  if(qfEl){
+    const sorted=[...KO.qf.matches].sort((a,b)=>(a.d+'T'+(a.t||'00:00'))<(b.d+'T'+(b.t||'00:00'))?-1:1);
+    qfEl.innerHTML=sorted.map(renderKOMItem).join('');
   }
 }
 
