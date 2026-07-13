@@ -616,6 +616,14 @@ input:focus{outline:none;border-color:var(--accent)}
         </div>
         <div class="matches-grid" id="d-qf"></div>
       </div>
+      <div class="dash-card" style="margin-bottom:0;padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+          <h3 style="margin:0;white-space:nowrap">Play Off — Semi-Finals</h3>
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+        </div>
+        <div class="matches-grid" id="d-sf"></div>
+      </div>
     </div>
 
     <!-- GROUPS -->
@@ -992,8 +1000,8 @@ const KO = {
     {id:'M100',h:'Argentina',a:'Switzerland',d:'2026-07-12',t:'03:00',v:'TBD'}
   ]},
   sf:{title:'Semi-Finals',matches:[
-    {id:'M101',h:'W M97', a:'W M98', d:'2026-07-14',v:'TBD'},
-    {id:'M102',h:'W M99', a:'W M100',d:'2026-07-15',v:'TBD'}
+    {id:'M101',h:'France',  a:'Spain',     d:'2026-07-14',t:'21:00',v:'TBD'},
+    {id:'M102',h:'England', a:'Argentina', d:'2026-07-15',t:'21:00',v:'TBD'}
   ]},
   tp:{title:'3rd Place',matches:[
     {id:'M103',h:'L M101',a:'L M102',d:'2026-07-18',v:'TBD'}
@@ -1372,6 +1380,11 @@ function renderDash(){
   if(qfEl){
     const sorted=[...KO.qf.matches].sort((a,b)=>(a.d+'T'+(a.t||'00:00'))<(b.d+'T'+(b.t||'00:00'))?-1:1);
     qfEl.innerHTML=sorted.map(renderKOMItem).join('');
+  }
+  const sfEl=document.getElementById('d-sf');
+  if(sfEl){
+    const sorted=[...KO.sf.matches].sort((a,b)=>(a.d+'T'+(a.t||'00:00'))<(b.d+'T'+(b.t||'00:00'))?-1:1);
+    sfEl.innerHTML=sorted.map(renderKOMItem).join('');
   }
 }
 
