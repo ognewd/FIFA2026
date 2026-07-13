@@ -658,6 +658,24 @@ input:focus{outline:none;border-color:var(--accent)}
         <div class="boot-player-grid" id="boot-player-grid"></div>
         <button class="btn-primary" id="boot-save-btn" onclick="saveBootPick()" style="height:44px;font-size:14px">Save Pick</button>
       </div>
+      <!-- BONUS: World Champion -->
+      <div class="bonus-boot-card" style="margin-top:12px">
+        <div class="bonus-boot-title">
+          <div style="flex:1;height:1px;background:rgba(251,191,36,.3)"></div>
+          <h3>🏆 World Champion 2026</h3>
+          <div style="flex:1;height:1px;background:rgba(251,191,36,.3)"></div>
+        </div>
+        <div class="bonus-boot-sub">Who will win the World Cup? · +8 pts for the correct answer</div>
+        <div class="bonus-boot-sub" style="margin-top:-8px;font-size:11px;color:#b45309">🔒 Available until the first semi-final · France vs Spain · 14 Jul 21:00</div>
+        <div class="boot-result-row" id="champ-result-row"></div>
+        <div class="boot-admin-row" id="champ-admin-row">
+          <select class="boot-admin-sel" id="champ-admin-sel" onchange="saveChampResult()">
+            <option value="">— Set World Champion (admin) —</option>
+          </select>
+        </div>
+        <div class="boot-player-grid" id="champ-player-grid" style="grid-template-columns:repeat(2,1fr)"></div>
+        <button class="btn-primary" id="champ-save-btn" onclick="saveChampPick()" style="height:44px;font-size:14px">Save Pick</button>
+      </div>
     </div>
 
     <!-- GROUPS -->
@@ -1057,6 +1075,12 @@ const BOOT_OPTS=[
   {id:'dembele',   name:'Ousmane Dembélé', nat:'FRA', cc:'fr',     img:'https://api.sofascore.app/api/v1/player/553501/image'},
   {id:'other',     name:'Someone else',    nat:'',    cc:'',       img:''},
 ];
+const CHAMP_OPTS=[
+  {id:'france',    name:'France',    cc:'fr'},
+  {id:'spain',     name:'Spain',     cc:'es'},
+  {id:'england',   name:'England',   cc:'gb-eng'},
+  {id:'argentina', name:'Argentina', cc:'ar'},
+];
 
 // Known team names used directly as h/a in KO matches (show flag, no TBD style)
 const QUALIFIED = {
@@ -1275,6 +1299,9 @@ function userStats(uid){
   const bootRes=S.results['BONUS_BOOT'];
   const bootPred=S.preds[uid]?.['BONUS_BOOT'];
   if(bootRes&&bootPred){if(bootPred===bootRes){tot+=8;ex++;}}
+  const champRes=S.results['BONUS_CHAMP'];
+  const champPred=S.preds[uid]?.['BONUS_CHAMP'];
+  if(champRes&&champPred){if(champPred===champRes){tot+=8;ex++;}}
   return{tot,ex,cor,wr};
 }
 
@@ -1433,6 +1460,7 @@ function renderDash(){
     sfEl.innerHTML=sorted.map(renderKOMItem).join('');
   }
   renderBonusBoot();
+  renderBonusChamp();
 }
 
 // ── Golden Boot Bonus ──
@@ -1512,6 +1540,80 @@ async function saveBootResult(){
   await saveS();
   toast('Boot result saved ✓','ok');
   renderBonusBoot();
+  renderCurrent();
+}
+// ── World Champion Bonus ──
+function renderBonusChamp(){
+  const grid=document.getElementById('champ-player-grid');
+  if(!grid)return;
+  const myPick=S.preds[S.user]?.['BONUS_CHAMP'];
+  const result=S.results['BONUS_CHAMP'];
+  const isAdmin=S.user==='dima';
+  const sf1=KO.sf.matches[0];
+  const locked=!!result||matchStarted(sf1);
+
+  const resRow=document.getElementById('champ-result-row');
+  if(resRow){
+    if(result){
+      const winner=CHAMP_OPTS.find(o=>o.id===result);
+      resRow.style.display='block';
+      resRow.innerHTML=`🏆 World Champion: <strong>${winner?winner.name:result}</strong>${winner?.cc?` <img src="https://flagcdn.com/20x15/${winner.cc}.png" style="vertical-align:middle">`:''} · ${myPick===result?'<span style="color:#16a34a">+8 pts ✓</span>':'<span style="color:#dc2626">0 pts</span>'}`;
+    } else {resRow.style.display='none';}
+  }
+
+  const adminRow=document.getElementById('champ-admin-row');
+  const adminSel=document.getElementById('champ-admin-sel');
+  if(adminRow&&adminSel&&isAdmin){
+    adminRow.style.display='block';
+    if(adminSel.options.length===1){
+      CHAMP_OPTS.forEach(o=>{
+        const opt=document.createElement('option');
+        opt.value=o.id; opt.textContent=o.name;
+        adminSel.appendChild(opt);
+      });
+    }
+    if(result)adminSel.value=result;
+  }
+
+  grid.innerHTML=CHAMP_OPTS.map(o=>{
+    const sel=myPick===o.id;
+    const flag=o.cc?`<img src="https://flagcdn.com/48x36/${o.cc}.png" style="border-radius:6px;margin-bottom:6px" alt="${o.name}">`:'';
+    return`<button class="boot-player-btn${sel?' sel':''}" ${locked?'disabled':''} onclick="selectChamp('${o.id}')">
+      <div style="font-size:36px">${flag}</div>
+      <div class="boot-player-name" style="font-size:12px">${o.name}</div>
+    </button>`;
+  }).join('');
+
+  const saveBtn=document.getElementById('champ-save-btn');
+  if(saveBtn){
+    if(locked&&!result){saveBtn.textContent='Locked — SF started 🔒';saveBtn.disabled=true;}
+    else if(locked){saveBtn.textContent='Locked 🔒';saveBtn.disabled=true;}
+    else{saveBtn.textContent='Save Pick';saveBtn.disabled=false;}
+  }
+}
+let _champPick=null;
+function selectChamp(id){
+  _champPick=id;
+  document.querySelectorAll('#champ-player-grid .boot-player-btn').forEach(b=>b.classList.remove('sel'));
+  const idx=CHAMP_OPTS.findIndex(o=>o.id===id);
+  const btns=[...document.querySelectorAll('#champ-player-grid .boot-player-btn')];
+  if(btns[idx])btns[idx].classList.add('sel');
+}
+async function saveChampPick(){
+  if(!_champPick){return;}
+  if(!S.preds[S.user])S.preds[S.user]={};
+  S.preds[S.user]['BONUS_CHAMP']=_champPick;
+  await saveS();
+  toast('Saved! ✓','ok');
+  renderBonusChamp();
+}
+async function saveChampResult(){
+  const val=document.getElementById('champ-admin-sel')?.value;
+  if(!val)return;
+  S.results['BONUS_CHAMP']=val;
+  await saveS();
+  toast('Champion result saved ✓','ok');
+  renderBonusChamp();
   renderCurrent();
 }
 // ── Race to the trophy (dashboard standings) ──
