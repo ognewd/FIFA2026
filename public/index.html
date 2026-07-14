@@ -1470,7 +1470,8 @@ function renderBonusBoot(){
   const myPick=S.preds[S.user]?.['BONUS_BOOT'];
   const result=S.results['BONUS_BOOT'];
   const isAdmin=S.user==='dima';
-  const locked=!!result;
+  const sf1=KO.sf.matches[0];
+  const locked=!!result||matchStarted(sf1);
 
   // Result banner
   const resRow=document.getElementById('boot-result-row');
@@ -1478,7 +1479,7 @@ function renderBonusBoot(){
     if(result){
       const winner=BOOT_OPTS.find(o=>o.id===result);
       resRow.style.display='block';
-      resRow.innerHTML=`🥾 Golden Boot: <strong>${winner?winner.name:result}</strong>${winner?.cc?` ${bf(winner.cc.toUpperCase()+'?')||''}`:''} · ${myPick===result?'<span style="color:#16a34a">+8 pts ✓</span>':'<span style="color:#dc2626">0 pts</span>'}`;
+      resRow.innerHTML=`🥾 Golden Boot: <strong>${winner?winner.name:result}</strong> · ${myPick===result?'<span style="color:#16a34a">+8 pts ✓</span>':'<span style="color:#dc2626">0 pts</span>'}`;
     } else {resRow.style.display='none';}
   }
 
@@ -1504,16 +1505,20 @@ function renderBonusBoot(){
        `<div class="boot-photo-fb" style="display:none">${o.cc?`<img src="https://flagcdn.com/32x24/${o.cc}.png" style="border-radius:4px">`:''}<span style="${o.cc?'display:none':''}">${o.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</span></div>`
       :`<div class="boot-photo-fb">❓</div>`;
     const flag=o.cc?`<img src="https://flagcdn.com/16x12/${o.cc}.png" style="vertical-align:middle;margin-right:3px" alt="${o.nat}">`:'';
+    const pickers=locked?Object.keys(USERS).filter(u=>S.preds[u]?.['BONUS_BOOT']===o.id):[];
+    const pickersHtml=pickers.length?`<div style="margin-top:4px;display:flex;flex-wrap:wrap;justify-content:center;gap:2px">${pickers.map(u=>`<span style="font-size:14px" title="${USERS[u].name}">${USERS[u].av}</span>`).join('')}</div>`:'';
     return`<button class="boot-player-btn${sel?' sel':''}" ${locked?'disabled':''} onclick="selectBoot('${o.id}')">
       ${photo}
       <div class="boot-player-name">${o.name}</div>
       ${o.nat?`<div class="boot-player-nat">${flag}${o.nat}</div>`:''}
+      ${pickersHtml}
     </button>`;
   }).join('');
 
   const saveBtn=document.getElementById('boot-save-btn');
   if(saveBtn){
-    if(locked){saveBtn.textContent='Locked 🔒';saveBtn.disabled=true;}
+    if(locked&&!result){saveBtn.textContent='Locked — SF started 🔒';saveBtn.disabled=true;}
+    else if(locked){saveBtn.textContent='Locked 🔒';saveBtn.disabled=true;}
     else{saveBtn.textContent='Save Pick';saveBtn.disabled=false;}
   }
 }
@@ -1578,9 +1583,12 @@ function renderBonusChamp(){
   grid.innerHTML=CHAMP_OPTS.map(o=>{
     const sel=myPick===o.id;
     const flag=o.cc?`<img src="https://flagcdn.com/48x36/${o.cc}.png" style="border-radius:6px;margin-bottom:6px" alt="${o.name}">`:'';
+    const pickers=locked?Object.keys(USERS).filter(u=>S.preds[u]?.['BONUS_CHAMP']===o.id):[];
+    const pickersHtml=pickers.length?`<div style="margin-top:4px;display:flex;flex-wrap:wrap;justify-content:center;gap:2px">${pickers.map(u=>`<span style="font-size:14px" title="${USERS[u].name}">${USERS[u].av}</span>`).join('')}</div>`:'';
     return`<button class="boot-player-btn${sel?' sel':''}" ${locked?'disabled':''} onclick="selectChamp('${o.id}')">
       <div style="font-size:36px">${flag}</div>
       <div class="boot-player-name" style="font-size:12px">${o.name}</div>
+      ${pickersHtml}
     </button>`;
   }).join('');
 
