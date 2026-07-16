@@ -641,6 +641,22 @@ input:focus{outline:none;border-color:var(--accent)}
         </div>
         <div class="matches-grid" id="d-sf"></div>
       </div>
+      <div class="dash-card" style="margin-bottom:0;padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+          <h3 style="margin:0;white-space:nowrap">3rd Place</h3>
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+        </div>
+        <div class="matches-grid" id="d-tp"></div>
+      </div>
+      <div class="dash-card" style="margin-bottom:0;padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+          <h3 style="margin:0;white-space:nowrap">🏆 Final</h3>
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+        </div>
+        <div class="matches-grid" id="d-fin"></div>
+      </div>
       <!-- BONUS: Golden Boot -->
       <div class="bonus-boot-card">
         <div class="bonus-boot-title">
@@ -1459,6 +1475,10 @@ function renderDash(){
     const sorted=[...KO.sf.matches].sort((a,b)=>(a.d+'T'+(a.t||'00:00'))<(b.d+'T'+(b.t||'00:00'))?-1:1);
     sfEl.innerHTML=sorted.map(renderKOMItem).join('');
   }
+  const tpEl=document.getElementById('d-tp');
+  if(tpEl){ const sorted=[...KO.tp.matches].sort((a,b)=>(a.d+'T'+(a.t||'00:00'))<(b.d+'T'+(b.t||'00:00'))?-1:1); tpEl.innerHTML=sorted.map(renderKOMItem).join(''); }
+  const finEl=document.getElementById('d-fin');
+  if(finEl){ const sorted=[...KO.fin.matches].sort((a,b)=>(a.d+'T'+(a.t||'00:00'))<(b.d+'T'+(b.t||'00:00'))?-1:1); finEl.innerHTML=sorted.map(renderKOMItem).join(''); }
   renderBonusBoot();
   renderBonusChamp();
 }
